@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Aura — Mind, Culture & Self-Improvement</title>
+
+  <!-- iOS & PWA Настройки -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Aura">
+  <meta name="theme-color" content="#0D0D0E">
+
+  <!-- Иконка приложения (App Icon) для iOS и PWA -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%231a1921'/><stop offset='100%' stop-color='%2309090b'/></linearGradient><linearGradient id='aura' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23E2C976'/><stop offset='50%' stop-color='%23D4AF37'/><stop offset='100%' stop-color='%238A6D1D'/></linearGradient><filter id='glow' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='12' result='blur'/><feComposite in='SourceGraphic' in2='blur' operator='over'/></filter></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><circle cx='256' cy='256' r='140' fill='none' stroke='url(%23aura)' stroke-width='16' filter='url(%23glow)' opacity='0.4'/><circle cx='256' cy='256' r='110' fill='none' stroke='url(%23aura)' stroke-width='20' filter='url(%23glow)'/><path d='M256 180 C210 180 180 220 180 256 C180 292 210 332 256 332 C302 332 332 292 332 256 C332 220 302 180 256 180 Z' fill='none' stroke='url(%23aura)' stroke-width='6' opacity='0.6'/><circle cx='256' cy='256' r='18' fill='url(%23aura)'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%230D0D0E'/><circle cx='256' cy='256' r='110' fill='none' stroke='%23D4AF37' stroke-width='24'/></svg>">
+
+  <!-- Встроенный PWA Манифест -->
+  <link rel="manifest" href="data:application/manifest+json;choice=tap;utf8,{%22name%22:%22Aura%20—%20Mind,%20Culture%20%26%20Self-Improvement%22,%22short_name%22:%22Aura%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230D0D0E%22,%22theme_color%22:%22%230D0D0E%22}">
+
+  <!-- Внешние шрифты Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+
+  <!-- Библиотека иконок Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Библиотека html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    /* CSS-переменные для Светлой и Тёмной тем */
+    :root {
+      --bg-color: #F8F9FA;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: #E5E5EA;
+      --text-main: #1C1C1E;
+      --text-secondary: #8E8E93;
+      --accent-glow: rgba(230, 230, 235, 0.8);
+      --font-ui: 'Inter', -apple-system, sans-serif;
+      --font-script: 'Sacramento', cursive;
+      --hover-bg: #f0f0f0;
+      --accent-color: #4A90E2;
+      --input-bg: #ffffff;
+      --modal-bg: rgba(255, 255, 255, 0.95);
+      --gold-accent: #D4AF37;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0D0D0E;
+      --card-bg: rgba(26, 26, 30, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #F2F2F7;
+      --text-secondary: #98989D;
+      --accent-glow: rgba(60, 60, 80, 0.4);
+      --hover-bg: #2C2C2E;
+      --accent-color: #64B5F6;
+      --input-bg: #1C1C1E;
+      --modal-bg: rgba(20, 20, 24, 0.95);
+      --gold-accent: #FFD700;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Фоновое свечение */
+    .bg-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Главный контейнер (Стилизация под iOS) */
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 920px;
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 0.5px solid var(--card-border);
+      border-radius: 38px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
+        border: none;
+      }
+    }
+
+    header {
+      padding: 16px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-script);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--hover-bg);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #FF9500;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 12px;
+      color: var(--text-main);
+    }
+
+    .header-icons i, .header-icons svg {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .header-icons i:hover, .header-icons svg:hover {
+      transform: scale(1.1);
+    }
+
+    /* Область свайпа / контента */
+    .content {
+      flex: 1;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .view-panel {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      padding: 12px 20px 24px;
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card-border) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .view-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .view-panel::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 4px;
+    }
+
+    .hero-script {
+      font-family: var(--font-script);
+      font-size: 38px;
+      text-align: center;
+      margin: 4px 0 16px;
+      opacity: 0.85;
+      line-height: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Таймер */
+    .timer-presets {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+
+    .preset-btn {
+      background: var(--hover-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-btn.active {
+      background: var(--text-main);
+      color: var(--bg-color);
+    }
+
+    .timer-display {
+      font-size: 48px;
+      font-weight: 300;
+      text-align: center;
+      margin: 10px 0 15px;
+      letter-spacing: -1px;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Трекер привычек */
+    .habit-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--hover-bg);
+      border-radius: 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .habit-item:active {
+      transform: scale(0.98);
+    }
+
+    .habit-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .habit-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .habit-item.done .habit-check {
+      background: #34C759;
+      border-color: #34C759;
+      color: #fff;
+    }
+
+    .habit-item.done .habit-title {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+
+    /* Дневник рефлексии */
+    .reflection-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .reflection-textarea {
+      width: 100%;
+      height: 70px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 12.5px;
+      outline: none;
+      resize: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .btn {
+      background: var(--text-main);
+      color: var(--bg-color);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .btn:active {
+      transform: scale(0.94);
+    }
+
+    .btn-secondary {
+      background: var(--hover-bg);
+      color: var(--text-main);
+    }
+
+    /* Таббар навигации */
+    nav {
+      padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid var(--card-border);
+      background: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    /* Календарь */
+    .calendar-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 16px;
+      border: 0.5px solid var(--card-border);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .calendar-header button {
+      background: var(--hover-bg);
+      color: var(--text-main);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calendar-weekdays, .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      gap: 6px;
+    }
+
+    .calendar-weekdays {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .day-cell {
+      padding: 8px 0;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      position: relative;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-cell:hover {
+      background: var(--hover-bg);
+    }
+
+    .day-cell.selected {
+      box-shadow: 0 0 0 2px var(--accent-color);
+      font-weight: 600;
+    }
+
+    .day-cell.today {
+      background: var(--text-main);
+      color: var(--bg-color);
+      font-weight: bold;
+    }
+
+    .day-cell.event-day {
+      border: 1.5px solid var(--gold-accent);
+    }
+
+    .day-dots {
+      display: flex;
+      gap: 2px;
+      position: absolute;
+      bottom: 3px;
+    }
+
+    .day-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+    }
+
+    /* Карточка духовного праздника */
+    .event-card {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold-accent);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .event-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .event-tradition {
+      font-size: 11px;
+      background: var(--gold-accent);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .event-desc {
+      font-size: 12px;
+      margin: 8px 0;
+      color: var(--text-main);
+    }
+
+    .event-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .event-list {
+      font-size: 11.5px;
+      padding-left: 16px;
+      margin-top: 2px;
+      color: var(--text-secondary);
+    }
+
+    /* Цитатник */
+    .quote-card-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quote-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .quote-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--hover-bg);
+      color: var(--text-main);
+      transform: scale(1.1);
+    }
+
+    .icon-btn.active {
+      color: #FF2D55;
+    }
+
+    .quote-clickable-area {
+      cursor: pointer;
+    }
+
+    .quote-text {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .quote-author {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .quote-expand-hint {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .quote-clickable-area.open .quote-expand-hint {
+      transform: rotate(180deg);
+    }
+
+    .quote-explanation-wrapper {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .quote-clickable-area.open + .quote-explanation-wrapper {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .quote-explanation {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-top: 12px;
+      border-top: 0.5px dashed var(--card-border);
+    }
+
+    /* Академический курс и Древо */
+    .month-accordion { margin-bottom: 12px; }
+    .month-header { font-size: 13px; font-weight: 700; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
+    .week-item { background: var(--hover-bg); border-radius: 12px; padding: 12px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s ease; }
+    .week-item:hover { transform: translateX(2px); }
+    .week-title { font-size: 13px; font-weight: 600; }
+    .week-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    .tree-node { border-left: 2px solid var(--accent-color); padding-left: 10px; margin: 8px 0; }
+    .compare-selects { display: flex; gap: 8px; margin-bottom: 12px; }
+    .compare-select { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-main); font-size: 12px; outline: none; }
+    .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; border-top: 0.5px solid var(--card-border); padding: 8px 0; }
+
+    /* Планировщик задач в календаре */
+    .calendar-tasks-section { margin-top: 16px; padding-top: 16px; border-top: 0.5px solid var(--card-border); }
+    .time-picker-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+    .time-input { width: 80px; padding: 8px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-main); font-size: 12px; text-align: center; outline: none; }
+    .color-picker { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+    .color-opt { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s ease; }
+    .color-opt:hover, .color-opt.active { transform: scale(1.2); border-color: var(--text-main); }
+    .task-input-group { display: flex; gap: 8px; margin-top: 10px; }
+    .text-input { flex: 1; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-main); outline: none; font-size: 13px; user-select: text; -webkit-user-select: text; }
+    .task-list { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .task-item { display: flex; justify-content: space-between; align-items: center; background: var(--hover-bg); padding: 10px 14px; border-radius: 12px; font-size: 13px; border-left: 4px solid var(--accent-color); }
+    .task-info { display: flex; flex-direction: column; gap: 2px; }
+    .task-time { font-size: 11px; color: var(--text-secondary); }
+
+    /* Карточки Избранного */
+    .fav-card { background: var(--card-bg); border: 0.5px solid var(--card-border); border-radius: 20px; padding: 18px; margin-bottom: 14px; position: relative; }
+    .fav-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .fav-author-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .fav-author-era { font-size: 11px; color: var(--text-secondary); }
+    .fav-card-delete { color: var(--text-secondary); cursor: pointer; padding: 4px; }
+    .fav-card-delete:hover { color: #FF3B30; }
+    .fav-book-badge { font-size: 11px; color: var(--text-secondary); background: var(--hover-bg); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
+    .fav-quote-text { font-size: 14.5px; line-height: 1.5; color: var(--text-main); margin-bottom: 10px; }
+    .fav-exp-toggle { font-size: 12px; color: var(--accent-color); cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 500; }
+    .fav-exp-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; opacity: 0; }
+    .fav-exp-wrapper.open { max-height: 200px; opacity: 1; margin-top: 10px; }
+    .fav-exp-content { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; padding-top: 10px; border-top: 0.5px dashed var(--card-border); }
+
+    /* Элементы настроек */
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 0.5px solid var(--card-border); }
+    .setting-row:last-child { border-bottom: none; }
+    .select-input { padding: 6px 12px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-main); outline: none; font-size: 13px; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--hover-bg); transition: .3s; border-radius: 24px; border: 1px solid var(--card-border); }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: var(--text-main); transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--accent-color); }
+    input:checked + .slider:before { transform: translateX(20px); background-color: #ffffff; }
+
+    /* Модальные окна (Bottom Sheet) */
+    .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 20; display: none; justify-content: center; align-items: flex-end; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { width: 100%; background: var(--modal-bg); border-top-left-radius: 28px; border-top-right-radius: 28px; padding: 24px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 30px rgba(0,0,0,0.2); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); -webkit-overflow-scrolling: touch; position: relative; }
+    .modal-drag-handle { width: 36px; height: 4px; background: var(--card-border); border-radius: 2px; margin: -12px auto 16px auto; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .close-btn-trigger { cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main); }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .philosopher-era { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .philosopher-bio { font-size: 13.5px; line-height: 1.6; color: var(--text-main); margin-bottom: 16px; }
+    .philosopher-book { font-size: 12px; background: var(--hover-bg); padding: 8px 12px; border-radius: 10px; display: inline-block; font-weight: 500; }
+    .flashcard { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; text-align: center; min-height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; margin: 10px 0; }
+    .quiz-opt { background: var(--hover-bg); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 12px; font-size: 12.5px; margin-bottom: 6px; cursor: pointer; text-align: left; }
+    .quiz-opt.correct { background: rgba(52, 199, 89, 0.2); border-color: #34C759; }
+    .quiz-opt.wrong { background: rgba(255, 59, 48, 0.2); border-color: #FF3B30; }
+    .badges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+    .badge-item { background: var(--hover-bg); padding: 10px 6px; border-radius: 12px; font-size: 11px; }
+    .badge-icon { font-size: 20px; margin-bottom: 4px; }
+    .disclaimer-banner { font-size: 11px; color: var(--text-secondary); background: var(--hover-bg); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; line-height: 1.4; }
+
+    /* Поисковое окно */
+    .search-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--card-bg); backdrop-filter: blur(15px); z-index: 10; display: none; flex-direction: column; padding: 24px; }
+    .search-overlay.active { display: flex; }
+
+    /* СТИЛИ ДЛЯ НОВЫХ ФИЧ */
+    .mood-selector { display: flex; justify-content: space-between; margin-bottom: 12px; gap: 4px; }
+    .mood-btn { flex: 1; background: var(--hover-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 4px; text-align: center; cursor: pointer; font-size: 18px; transition: all 0.2s ease; }
+    .mood-btn.selected { border-color: var(--accent-color); background: var(--input-bg); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .mood-btn span { display: block; font-size: 9px; margin-top: 2px; color: var(--text-secondary); }
+
+    .tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .tag-chip { font-size: 11px; padding: 4px 8px; border-radius: 10px; background: var(--hover-bg); border: 1px solid var(--card-border); cursor: pointer; transition: all 0.2s ease; }
+    .tag-chip.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+    .reflection-history-item { background: var(--hover-bg); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 0.5px solid var(--card-border); }
+    .reflection-history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; color: var(--text-secondary); }
+
+    .search-cat-title { font-size: 11px; font-weight: 700; color: var(--accent-color); text-transform: uppercase; margin: 12px 0 6px; }
+    .search-item { background: var(--hover-bg); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 12.5px; }
+
+    .glossary-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .glossary-item { background: var(--hover-bg); border-radius: 12px; padding: 10px; }
+    .glossary-term { font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .glossary-def { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; }
+
+    .audio-player-box { display: flex; align-items: center; gap: 8px; margin-top: 10px; background: var(--hover-bg); padding: 8px 12px; border-radius: 12px; }
+
+    /* Стили генератора картинок */
+    #story-canvas-container { display: none; position: fixed; top: -9999px; left: -9999px; }
+    .story-card-wrapper { width: 360px; height: 640px; background: linear-gradient(135deg, #1f1c2c, #928dab); color: #fff; padding: 40px 30px; display: flex; flex-direction: column; justify-content: space-between; font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    .story-brand { font-family: 'Sacramento', cursive; font-size: 40px; text-align: center; }
+    .story-quote { font-size: 20px; line-height: 1.6; text-align: center; font-style: italic; }
+    .story-author { font-size: 14px; text-align: center; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; }
+
+    .level-bar-container { background: var(--hover-bg); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .level-bar-fill { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- Фон со свечением -->
+  <div class="bg-glow" id="glow"></div>
+
+  <!-- Главный контейнер приложения -->
+  <div class="app-container" id="app">
+    <header>
+      <div class="brand-title">Aura</div>
+      <div class="header-right">
+        <div class="streak-badge">
+          <i data-lucide="flame" style="width:14px; height:14px;"></i>
+          <span id="streak-count">5 дней</span>
+        </div>
+        <div class="header-icons">
+          <i data-lucide="award" id="btn-achievements"></i>
+          <i data-lucide="search" id="btn-search"></i>
+          <i data-lucide="settings" id="btn-quick-settings"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Окно поиска -->
+    <div class="search-overlay" id="search-overlay">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <span style="font-weight: 600;" data-i18n="searchTitle">Глобальный Поиск</span>
+        <div class="close-btn-trigger" id="btn-close-search">
+          <i data-lucide="x"></i>
+        </div>
+      </div>
+      <input type="text" class="text-input" id="search-input" placeholder="Поиск по заметкам, цитатам, урокам..." autofocus>
+      <div id="search-results" style="font-size: 13px; color: var(--text-secondary); margin-top: 16px; overflow-y:auto; flex:1;"></div>
+    </div>
+
+    <!-- Модальное окно "О философе" -->
+    <div class="modal-overlay" id="philosopher-modal">
+      <div class="modal-card" id="modal-card-element">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-header">
+          <span class="modal-title" id="modal-philosopher-name">Философ</span>
+          <div class="close-btn-trigger" id="btn-close-modal">
+            <i data-lucide="x"></i>
+          </div>
+        </div>
+        <div class="philosopher-era" id="modal-philosopher-era">Эпоха</div>
+        <div class="philosopher-bio" id="modal-philosopher-bio">Биография...</div>
+        <div class="philosopher-book" id="modal-philosopher-book">Главный труд: —</div>
+      </div>
+    </div>
+
+    <!-- Модальное окно Урока -->
+    <div class="modal-overlay" id="lesson-modal">
+      <div class="modal-card">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-header">
+          <span class="modal-title" id="modal-lesson-title">Урок</span>
+          <div class="close-btn-trigger" onclick="closeModal('lesson-modal')">
+            <i data-lucide="x"></i>
+          </div>
+        </div>
+        <div class="disclaimer-banner">
+          🏛️ Академический контент. Ссылки на исторические источники.
+        </div>
+        <div id="modal-lesson-content" style="font-size:13px; line-height:1.6; margin-bottom:16px;"></div>
+        
+        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Запоминаем понятие (Нажмите для переворота):</div>
+        <div class="flashcard" id="lesson-flashcard" onclick="flipFlashcard()">
+          <div id="flashcard-front" style="font-weight:600; font-size:14px;"></div>
+          <div id="flashcard-back" style="display:none; color:var(--text-secondary); font-size:12.5px; margin-top:6px;"></div>
+        </div>
+
+        <div style="font-size:12px; font-weight:600; margin:14px 0 8px;">Микро-тест:</div>
+        <div id="quiz-container"></div>
+        
+        <button class="btn" style="margin-top:14px; width:100%;" onclick="completeLesson()">Завершить урок (+10 XP)</button>
+      </div>
+    </div>
+
+    <!-- Модальное окно Достижений -->
+    <div class="modal-overlay" id="badges-modal">
+      <div class="modal-card">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-header">
+          <span class="modal-title" data-i18n="achievementsTitle">Достижения и Прогресс</span>
+          <div class="close-btn-trigger" onclick="closeModal('badges-modal')">
+            <i data-lucide="x"></i>
+          </div>
+        </div>
+
+        <!-- Уровень и XP -->
+        <div style="margin-bottom: 16px; background: var(--hover-bg); padding: 12px; border-radius: 14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600;">
+            <span id="user-rank-title">Ученик</span>
+            <span id="user-xp-text">0 / 50 XP</span>
+          </div>
+          <div class="level-bar-container">
+            <div class="level-bar-fill" id="level-bar-fill"></div>
+          </div>
+        </div>
+
+        <div class="badges-grid">
+          <div class="badge-item">
+            <div class="badge-icon">🌿</div>
+            <b>Истоки</b>
+            <div style="color:var(--text-secondary); font-size:10px;">Пройден Месяц 1</div>
+          </div>
+          <div class="badge-item">
+            <div class="badge-icon">📜</div>
+            <b>Авраамист</b>
+            <div style="color:var(--text-secondary); font-size:10px;">Пройден Месяц 2</div>
+          </div>
+          <div class="badge-item">
+            <div class="badge-icon">🏛️</div>
+            <b>Философ</b>
+            <div style="color:var(--text-secondary); font-size:10px;">Пройден Месяц 3</div>
+          </div>
+        </div>
+        <div style="margin-top:20px; text-align:center;">
+          <button class="btn btn-secondary" style="width:100%;" onclick="generateCertificate()">🎓 Получить Сертификат</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ОСНОВНАЯ ОБЛАСТЬ ЭКРАНОВ СВАЙПА -->
+    <div class="content" id="main-content">
+      
+      <!-- ЭКРАН 1: ДАШБОРД -->
+      <div class="view-panel" id="view-dashboard">
+        <div class="hero-script">Balance your life</div>
+
+        <!-- Карточка Цитаты -->
+        <div class="card" id="quote-card">
+          <div class="quote-card-container">
+            <div class="quote-top-bar">
+              <i data-lucide="quote" style="color:var(--text-secondary); opacity:0.4;"></i>
+              <div class="quote-actions">
+                <button class="icon-btn" id="btn-share-quote" title="Поделиться как картинкой" onclick="exportQuoteImage()">
+                  <i data-lucide="image" style="width:18px; height:18px;"></i>
+                </button>
+                <button class="icon-btn" id="btn-fav-quote" title="В избранное">
+                  <i data-lucide="heart" style="width:18px; height:18px;"></i>
+                </button>
+                <button class="icon-btn" id="btn-about-philosopher" title="О философе">
+                  <i data-lucide="book-open" style="width:18px; height:18px;"></i>
+                </button>
+                <button class="icon-btn" id="btn-refresh-quote" title="Следующая цитата">
+                  <i data-lucide="chevron-right" style="width:18px; height:18px;"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="quote-clickable-area" id="quote-trigger">
+              <div class="quote-text" id="quote-text">«...»</div>
+              <div class="quote-author">
+                <span id="quote-author">—</span>
+                <i data-lucide="chevron-down" style="width:14px; height:14px;" class="quote-expand-hint"></i>
+              </div>
+            </div>
+
+            <div class="quote-explanation-wrapper">
+              <div class="quote-explanation" id="quote-exp">...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Трекер привычек -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="habitsTitle"><i data-lucide="check-circle" style="width:18px"></i> Ежедневные Ритуалы</span>
+          </div>
+          <div id="habits-list">
+            <div class="habit-item" onclick="toggleHabit('meditation')">
+              <div class="habit-info">
+                <div class="habit-check" id="check-meditation"><i data-lucide="check" style="width:14px; height:14px;"></i></div>
+                <span class="habit-title">Медитация (10 мин)</span>
+              </div>
+            </div>
+            <div class="habit-item" onclick="toggleHabit('reading')">
+              <div class="habit-info">
+                <div class="habit-check" id="check-reading"><i data-lucide="check" style="width:14px; height:14px;"></i></div>
+                <span class="habit-title">Чтение (15 мин)</span>
+              </div>
+            </div>
+            <div class="habit-item" onclick="toggleHabit('sport')">
+              <div class="habit-info">
+                <div class="habit-check" id="check-sport"><i data-lucide="check" style="width:14px; height:14px;"></i></div>
+                <span class="habit-title">Спорт / Зарядка</span>
+              </div>
+            </div>
+            <div class="habit-item" onclick="toggleHabit('gratitude')">
+              <div class="habit-info">
+                <div class="habit-check" id="check-gratitude"><i data-lucide="check" style="width:14px; height:14px;"></i></div>
+                <span class="habit-title">Дневник благодарности</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Быстрая Рефлексия -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="reflectionTitle"><i data-lucide="edit-3" style="width:18px"></i> Вечерняя Рефлексия</span>
+          </div>
+          <div class="reflection-box">
+            <div style="font-size:12px; color:var(--text-secondary);">Быстрая запись на сегодня:</div>
+            <textarea class="reflection-textarea" id="reflection-input" placeholder="Запишите свои мысли..."></textarea>
+            <button class="btn btn-secondary" style="align-self: flex-end;" onclick="saveQuickReflection()" data-i18n="save">Сохранить</button>
+          </div>
+        </div>
+
+        <!-- Таймер фокуса -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="timerTitle"><i data-lucide="clock" style="width:18px"></i> Таймер фокуса</span>
+            <span style="font-size: 12px; color: var(--text-secondary);" id="timer-label">25 мин</span>
+          </div>
+          <div class="timer-presets">
+            <button class="preset-btn active" onclick="setTimerPreset(25, 5, 'Работа (25/5)', this)">25/5</button>
+            <button class="preset-btn" onclick="setTimerPreset(50, 10, 'Глубокий фокус (50/10)', this)">50/10</button>
+            <button class="preset-btn" onclick="setTimerPreset(10, 0, 'Медитация (10 мин)', this)">Медитация</button>
+          </div>
+          <div class="timer-display" id="timer-display">25:00</div>
+          <div class="timer-controls">
+            <button class="btn" id="btn-timer-start">Старт</button>
+            <button class="btn btn-secondary" id="btn-timer-reset">Сброс</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ЭКРАН 2: КУРС РЕЛИГИОВЕДЕНИЯ & ГЛОССАРИЙ -->
+      <div class="view-panel" id="view-course">
+        <div class="hero-script">Религиоведение</div>
+
+        <!-- Аудио-сопровождение -->
+        <div class="card">
+          <div class="card-title"><i data-lucide="music" style="width:18px"></i> Аудио-амбиент API</div>
+          <div class="audio-player-box">
+            <select class="select-input" id="ambient-sound-select" style="flex:1;">
+              <option value="none">Без звука</option>
+              <option value="rain">Шум Дождя</option>
+              <option value="bowls">Тибетские Чаши</option>
+              <option value="space">Космический Эмбиент</option>
+            </select>
+            <button class="btn btn-secondary" id="btn-toggle-ambient" onclick="toggleAmbientSound()">Play</button>
+          </div>
+        </div>
+
+        <!-- Древо традиций -->
+        <div class="card">
+          <div class="card-title"><i data-lucide="git-branch" style="width:18px"></i> Древо традиций</div>
+          <div class="tree-node">
+            <b>Архаика</b>
+            <div style="font-size:11px; color:var(--text-secondary);">Анимизм → Шаманизм</div>
+            <div class="tree-node" style="margin-left:8px;">
+              <b>Политеизм</b>
+              <div style="font-size:11px; color:var(--text-secondary);">Египет, Греция, Веды</div>
+              <div class="tree-node" style="margin-left:8px;">
+                <b>Монотеизм & Дхарма</b>
+                <div style="font-size:11px; color:var(--text-secondary);">Авраамические & Индийские пути</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Список уроков -->
+        <div class="card">
+          <div class="card-title"><i data-lucide="book-open" style="width:18px"></i> Учебная программа</div>
+          
+          <div class="month-accordion">
+            <div class="month-header">Месяц 1: Истоки и Архаика</div>
+            <div class="week-item" onclick="openLessonModal(1)">
+              <div>
+                <div class="week-title">Неделя 1. Анимизм и Шаманизм</div>
+                <div class="week-subtitle">Первобытные формы верований</div>
+              </div>
+              <i data-lucide="chevron-right" style="width:16px;"></i>
+            </div>
+            <div class="week-item" onclick="openLessonModal(2)">
+              <div>
+                <div class="week-title">Неделя 2. Мифология Древнего Мира</div>
+                <div class="week-subtitle">Египет, Месопотамия и Греция</div>
+              </div>
+              <i data-lucide="chevron-right" style="width:16px;"></i>
+            </div>
+          </div>
+
+          <div class="month-accordion">
+            <div class="month-header">Месяц 2: Авраамические традиции</div>
+            <div class="week-item" onclick="openLessonModal(3)">
+              <div>
+                <div class="week-title">Неделя 5. Иудаизм</div>
+                <div class="week-subtitle">Завет, Тора и история</div>
+              </div>
+              <i data-lucide="chevron-right" style="width:16px;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Глоссарий священных терминов -->
+        <div class="card">
+          <div class="card-title"><i data-lucide="bookmark" style="width:18px"></i> Глоссарий Терминов</div>
+          <input type="text" class="text-input" id="glossary-search" placeholder="Поиск по терминам..." style="margin-top:8px;" oninput="filterGlossary()">
+          <div class="glossary-grid" id="glossary-container"></div>
+        </div>
+
+        <!-- Сравнитель религий -->
+        <div class="card">
+          <div class="card-title"><i data-lucide="columns" style="width:18px"></i> Сравнитель религий</div>
+          <div class="compare-selects">
+            <select class="compare-select" id="rel-1" onchange="updateComparison()">
+              <option value="christianity">Христианство</option>
+              <option value="islam">Ислам</option>
+              <option value="buddhism">Буддизм</option>
+              <option value="judaism">Иудаизм</option>
+            </select>
+            <select class="compare-select" id="rel-2" onchange="updateComparison()">
+              <option value="islam" selected>Ислам</option>
+              <option value="christianity">Христианство</option>
+              <option value="buddhism">Буддизм</option>
+              <option value="judaism">Иудаизм</option>
+            </select>
+          </div>
+          <div id="compare-result"></div>
+        </div>
+      </div>
+
+      <!-- ЭКРАН 3: КАЛЕНДАРЬ -->
+      <div class="view-panel" id="view-calendar">
+        <div class="hero-script">Календарь</div>
+        
+        <div class="calendar-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <select class="select-input" id="confession-filter" onchange="renderCalendar()" style="font-size:11px;">
+              <option value="all">Все конфессии</option>
+              <option value="Христианство">Христианство</option>
+              <option value="Ислам">Ислам</option>
+              <option value="Иудаизм">Иудаизм</option>
+              <option value="Буддизм">Буддизм</option>
+              <option value="Стоицизм / Философия">Философия</option>
+            </select>
+          </div>
+
+          <div class="calendar-header">
+            <button id="prev-month">&lt;</button>
+            <h3 id="month-year-title" style="font-size:15px; font-weight:600;">Сентябрь 2026</h3>
+            <button id="next-month">&gt;</button>
+          </div>
+          
+          <div class="calendar-weekdays" id="calendar-weekdays"></div>
+          <div class="calendar-days" id="calendar-days"></div>
+
+          <!-- Отображение духовного праздника -->
+          <div id="spiritual-event-view"></div>
+
+          <!-- Секция планировщика задач -->
+          <div class="calendar-tasks-section">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size: 13px; font-weight: 600;" id="selected-date-title">Записи на сегодня</span>
+            </div>
+
+            <div class="time-picker-row">
+              <input type="time" class="time-input" id="time-start" value="09:00">
+              <span style="font-size: 12px; color: var(--text-secondary);">—</span>
+              <input type="time" class="time-input" id="time-end" value="10:00">
+            </div>
+
+            <div class="color-picker" id="color-picker">
+              <span style="font-size: 12px; color: var(--text-secondary); margin-right: 4px;">Цвет:</span>
+              <div class="color-opt active" data-color="#4A90E2" style="background:#4A90E2;"></div>
+              <div class="color-opt" data-color="#34C759" style="background:#34C759;"></div>
+              <div class="color-opt" data-color="#FF9500" style="background:#FF9500;"></div>
+              <div class="color-opt" data-color="#FF2D55" style="background:#FF2D55;"></div>
+              <div class="color-opt" data-color="#AF52DE" style="background:#AF52DE;"></div>
+              <div class="color-opt" data-color="#5AC8FA" style="background:#5AC8FA;"></div>
+            </div>
+            
+            <div class="task-input-group">
+              <input type="text" class="text-input" id="new-task-input" placeholder="Новая задача или запись..." />
+              <button class="btn" id="btn-add-task">+</button>
+            </div>
+
+            <ul class="task-list" id="day-task-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ЭКРАН 4: ПОЛНОЦЕННАЯ РЕФЛЕКСИЯ & АНАЛИТИКА -->
+      <div class="view-panel" id="view-reflection">
+        <div class="hero-script">Рефлексия</div>
+
+        <div class="card">
+          <div class="card-title"><i data-lucide="smile" style="width:18px"></i> Состояние (Mood & Mind)</div>
+          <div class="mood-selector" id="mood-selector" style="margin-top:10px;">
+            <div class="mood-btn" data-mood="🧘" onclick="selectMood(this)">🧘<span>Спокойствие</span></div>
+            <div class="mood-btn" data-mood="💡" onclick="selectMood(this)">💡<span>Озарение</span></div>
+            <div class="mood-btn" data-mood="⚡" onclick="selectMood(this)">⚡<span>Энергия</span></div>
+            <div class="mood-btn" data-mood="🌀" onclick="selectMood(this)">🌀<span>Тревога</span></div>
+            <div class="mood-btn" data-mood="🍂" onclick="selectMood(this)">🍂<span>Усталость</span></div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 600; margin: 10px 0 6px;">Поисковые теги:</div>
+          <div class="tag-chips" id="tag-chips-container">
+            <div class="tag-chip" onclick="toggleTag(this, '#благодарность')">#благодарность</div>
+            <div class="tag-chip" onclick="toggleTag(this, '#озарение')">#озарение</div>
+            <div class="tag-chip" onclick="toggleTag(this, '#ислам')">#ислам</div>
+            <div class="tag-chip" onclick="toggleTag(this, '#стоицизм')">#стоицизм</div>
+            <div class="tag-chip" onclick="toggleTag(this, '#учеба')">#учеба</div>
+          </div>
+
+          <textarea class="reflection-textarea" id="full-reflection-text" placeholder="Глубокий анализ сегодняшнего дня..." style="height:100px;"></textarea>
+
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn" style="flex:1;" onclick="saveFullReflection()">Сохранить запись</button>
+            <button class="btn btn-secondary" onclick="exportReflectionData()">Экспорт JSON</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i data-lucide="archive" style="width:18px"></i> Архив Дневника</div>
+          <div id="reflection-archive-list" style="margin-top:10px;"></div>
+        </div>
+      </div>
+
+      <!-- ЭКРАН 5: ИЗБРАННОЕ -->
+      <div class="view-panel" id="view-favorites">
+        <div class="hero-script">Избранное</div>
+        <div class="fav-section active" id="fav-quotes">
+          <div id="favorites-list"></div>
+        </div>
+      </div>
+
+      <!-- ЭКРАН 6: НАСТРОЙКИ -->
+      <div class="view-panel" id="view-settings">
+        <div class="hero-script">Настройки</div>
+        
+        <div class="card">
+          <div class="setting-row">
+            <span style="font-size: 14px; font-weight: 500;" data-i18n="langLabel">Язык приложения</span>
+            <select class="select-input" id="language-select" onchange="setLanguage(this.value)">
+              <option value="ru">Русский</option>
+              <option value="en">English</option>
+              <option value="tr">Türkçe</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <span style="font-size: 14px; font-weight: 500;" data-i18n="themeLabel">Тёмная тема</span>
+            <label class="switch">
+              <input type="checkbox" id="theme-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Таббар навигации -->
+    <nav>
+      <div class="nav-item active" data-target="view-dashboard"><i data-lucide="layout-grid"></i></div>
+      <div class="nav-item" data-target="view-course"><i data-lucide="book-open"></i></div>
+      <div class="nav-item" data-target="view-calendar"><i data-lucide="calendar"></i></div>
+      <div class="nav-item" data-target="view-reflection"><i data-lucide="feather"></i></div>
+      <div class="nav-item" data-target="view-favorites"><i data-lucide="heart"></i></div>
+      <div class="nav-item" data-target="view-settings"><i data-lucide="settings"></i></div>
+    </nav>
+  </div>
+
+  <!-- Скрытый контейнер для генерации Сторис-карточек -->
+  <div id="story-canvas-container">
+    <div class="story-card-wrapper" id="story-card-node">
+      <div class="story-brand">Aura</div>
+      <div class="story-quote" id="story-quote-target">«...»</div>
+      <div class="story-author" id="story-author-target">— Автор</div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // PWA & SERVICE WORKER
+    // =============================
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => self.clients.claim());
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    }
+
+    // =============================
+    // МОДУЛЬ I18N (МУЛЬТИЯЗЫЧНОСТЬ)
+    // =============================
+    const i18n = {
+      ru: {
+        searchTitle: "Глобальный Поиск",
+        achievementsTitle: "Достижения и Прогресс",
+        habitsTitle: "Ежедневные Ритуалы",
+        reflectionTitle: "Вечерняя Рефлексия",
+        timerTitle: "Таймер фокуса",
+        save: "Сохранить",
+        langLabel: "Язык приложения",
+        themeLabel: "Тёмная тема",
+        meditation: "Медитация (10 мин)",
+        reading: "Чтение (15 мин)",
+        sport: "Спорт / Зарядка",
+        gratitude: "Дневник благодарности"
+      },
+      en: {
+        searchTitle: "Global Search",
+        achievementsTitle: "Achievements & Progress",
+        habitsTitle: "Daily Rituals",
+        reflectionTitle: "Evening Reflection",
+        timerTitle: "Focus Timer",
+        save: "Save",
+        langLabel: "App Language",
+        themeLabel: "Dark Theme",
+        meditation: "Meditation (10 min)",
+        reading: "Reading (15 min)",
+        sport: "Workout / Exercise",
+        gratitude: "Gratitude Journal"
+      },
+      tr: {
+        searchTitle: "Küresel Arama",
+        achievementsTitle: "Başarılar ve İlerleme",
+        habitsTitle: "Günlük Ritüeller",
+        reflectionTitle: "Akşam Değerlendirmesi",
+        timerTitle: "Odaklanma Zamanlayıcısı",
+        save: "Kaydet",
+        langLabel: "Uygulama Dili",
+        themeLabel: "Karanlık Tema",
+        meditation: "Meditasyon (10 dk)",
+        reading: "Okuma (15 dk)",
+        sport: "Egzersiz / Spor",
+        gratitude: "Şükran Günlüğü"
+      }
+    };
+
+    let currentLang = localStorage.getItem('aura_lang') || 'ru';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('aura_lang', lang);
+      document.getElementById('language-select').value = lang;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[lang] && i18n[lang][key]) {
+          el.textContent = i18n[lang][key];
+        }
+      });
+    }
+
+    // =============================
+    // МОДУЛИ ДАННЫХ
+    // =============================
+
+    // 1. Цитаты философов
+    const philosophersData = [
+      { id: 1, author: "Иммануил Кант", era: "Кёнигсберг, 1724–1804", text: "«Две вещи наполняют душу всегда новым и все более сильным удивлением: звездное небо над мной и моральный закон во мне.»", exp: "Внешний мир бесконечно велик, но внутренний совестливый компас не менее удивителен.", bio: "Немецкий философ, родоначальник немецкой классической философии.", book: "Критика чистого разума" },
+      { id: 2, author: "Марк Аврелий", era: "Римская империя, 121–180", text: "«Наша жизнь есть то, что мы думаем о ней.»", exp: "События сами по себе нейтральны. Все зависит от нашего восприятия.", bio: "Римский император и философ-стоик.", book: "Наедине с собой" },
+      { id: 3, author: "Фридрих Ницше", era: "Германия, 1844–1900", text: "«Тот, у кого есть Зачем жить, может вынести почти любое Как.»", exp: "Наличие четкого смысла делает преодолимыми любые жизненные испытания.", bio: "Немецкий мыслитель, подвергший переоценке традиционные моральные ценности.", book: "Так говорил Заратустра" },
+      { id: 4, author: "Сенека", era: "Римская империя, 4 до н.э. – 65 н.э.", text: "«Мы страдаем чаще воображением, чем реальностью.»", exp: "Страхи перед будущим причиняют больше боли, чем сама реальность.", bio: "Воспитатель Нерона, один из крупнейших представителей стоицизма.", book: "Нравственные письма к Луцилию" },
+      { id: 5, author: "Сократ", era: "Древняя Греция, 469–399 до н.э.", text: "«Я знаю только то, что ничего не знаю.»", exp: "Осознание собственного незнания — это первый шаг к настоящей мудрости.", bio: "Основатель западной философии.", book: "Диалоги Платона" },
+      { id: 6, author: "Платон", era: "Древняя Греция, 427–347 до н.э.", text: "«Будьте добры, ибо каждый, кого вы встречаете, ведет тяжелую битву.»", exp: "Сочувствие к людям рождается из понимания их внутренних трудностей.", bio: "Ученик Сократа, основатель Академии в Афинах.", book: "Государство" },
+      { id: 7, author: "Аристотель", era: "Древняя Греция, 384–322 до н.э.", text: "«Познание себя — это начало всей мудрости.»", exp: "Без понимания собственных мотивов и природы невозможно постичь мир.", bio: "Воспитатель Александра Македонского, создатель формальной логики.", book: "Никомахова этика" },
+      { id: 8, author: "Лао-цзы", era: "Древний Китай, VI в. до н.э.", text: "«Путешествие в тысячу миль начинается с одного шага.»", exp: "Любой грандиозный путь состоит из простых ежедневных действий.", bio: "Основатель даосизма.", book: "Дао Дэ Цзин" },
+      { id: 9, author: "Конфуций", era: "Древний Китай, 551–479 до н.э.", text: "«Не важно, как медленно ты идешь, главное — не останавливаться.»", exp: "Постоянство движения к цели важнее мгновенной скорости.", bio: "Древнекитайский мыслитель.", book: "Беседы и суждения" },
+      { id: 10, author: "Артур Шопенгауэр", era: "Германия, 1788–1860", text: "«Здоровье до того перевешивает все остальные блага жизни, что поистине здоровый нищий счастливее больного короля.»", exp: "Физическое и душевное благополучие — основа любого счастья.", bio: "Философ пессимизма.", book: "Мир как воля и представление" }
+    ];
+
+    // 2. Уроки курса
+    const lessonsData = {
+      1: {
+        title: "Неделя 1. Анимизм и Шаманизм",
+        text: "Анимизм — вера в одушевленность природы. Мир воспринимался как сообщество субъектов. Шаманизм выступает технологией взаимодействия с миром духов через трансовые состояния.",
+        cardFront: "Что такое Сакральное и Профанное?",
+        cardBack: "По М. Элиаде: Сакральное — область священного и вечного; Профанное — повседневная обыденность.",
+        quiz: [
+          { q: "Кто ввел понятие сакрального и профанного пространств?", opts: ["Мирча Элиаде", "Эмиль Дюркгейм", "Макс Вебер"], correct: 0 }
+        ]
+      },
+      2: {
+        title: "Неделя 2. Мифология Древнего Мира",
+        text: "Древнеегипетская и месопотамская традиции формируют переход к пантеонам богов, олицетворяющих космический порядок (Маат) или хаос.",
+        cardFront: "Что символизирует понятие 'Маат'?",
+        cardBack: "Древнеегипетскую концепцию истины, справедливости, гармонии и космического порядка.",
+        quiz: [
+          { q: "Какое понятие в Древнем Египте отвечало за космический порядок?", opts: ["Маат", "Ка", "Ба"], correct: 0 }
+        ]
+      },
+      3: {
+        title: "Неделя 5. Иудаизм",
+        text: "Иудаизм — одна из древнейших монотеистических религий, основанная на идее Завета между Богом и еврейским народом.",
+        cardFront: "Что такое Тора?",
+        cardBack: "Пятикнижие Моисеево — откровение и основы Закона в иудаизме.",
+        quiz: [
+          { q: "Сколько книг входит в Пятикнижие (Тору)?", opts: ["5", "10", "12"], correct: 0 }
+        ]
+      }
+    };
+
+    // 3. Глоссарий терминов
+    const glossaryTerms = [
+      { term: "Нирвана", def: "Состояние освобождения от страданий и цикла перерождений (Сансары) в буддизме." },
+      { term: "Дхарма", def: "Космический закон, порядок, долг и учение в индийских религиях." },
+      { term: "Завет", def: "Священный договор и союз между Богом и человеком (в иудаизме и христианстве)." },
+      { term: "Карма", def: "Причинно-следственный закон, согласно которому действия человека определяют его судьбу." },
+      { term: "Дао", def: "Первопричина, абсолют и естественный путь вещей в даосизме." },
+      { term: "Логос", def: "Разумное начало, мировой закон в античной философии и христианском богословии." },
+      { term: "Атараксия", def: "Душевное спокойствие, безмятежность и невозмутимость духа у стоиков и эпикурейцев." }
+    ];
+
+    // 4. Сравнительный модуль
+    const comparisonData = {
+      christianity: { 
+        name: "Христианство", 
+        god: "Личный Бог (Троица)", 
+        text: "Библия", 
+        goal: "Спасение души", 
+        rules: "Заповеди любви, милосердие, прощение обид, пост.", 
+        forbidden: "Греховные помыслы, гордыня, тяжелый труд в праздники/воскресенье." 
+      },
+      islam: { 
+        name: "Ислам", 
+        god: "Единый Бог (Аллах)", 
+        text: "Коран", 
+        goal: "Служение и Рай", 
+        rules: "5 столпов ислама, соблюдение поста в Рамадан, Садака (милостыня).", 
+        forbidden: "Харам (алкоголь, свинина, брань, ложь, нарушение поста)." 
+      },
+      buddhism: { 
+        name: "Буддизм", 
+        god: "Нетеистическая традиция", 
+        text: "Трипитака", 
+        goal: "Нирвана (Просветление)", 
+        rules: "8-ричный путь, 5 заповедей (Панчашила), медитация, Ахимса.", 
+        forbidden: "Причинение вреда живым существам, одурманивание ума." 
+      },
+      judaism: { 
+        name: "Иудаизм", 
+        god: "Единый Творец", 
+        text: "Танах / Тора", 
+        goal: "Соблюдение Завета и Тшува", 
+        rules: "Соблюдение Шаббата, изучения Торы, кошерность, добрые дела.", 
+        forbidden: "39 категорий работы в Шаббат, нарушение заповедей Закона." 
+      }
+    };
+
+    // 5. Алгоритмический / Динамический Календарь Праздников
+    const spiritualCalendar = {
+      "2026-09-11": {
+        title: "Рош ха-Шана (Еврейский Новый год)",
+        tradition: "Иудаизм",
+        type: "holiday",
+        description: "День сотворения мира и начала десяти дней покаяния.",
+        allowed: ["Размышления о поступках", "Семейная трапеза", "Яблоки с медом (символ сладкого года)"],
+        forbidden: ["Тяжелая работа", "Конфликты и ссоры"]
+      },
+      "2026-09-21": {
+        title: "Йом Кипур (День искупления)",
+        tradition: "Иудаизм",
+        type: "fast",
+        description: "Самый святой день года, день поста, молитвы и исповеди.",
+        allowed: ["Молитва", "Прощение обидчиков", "Духовный самоанализ"],
+        forbidden: ["Прием пищи и воды (25 часов)", "Ношение кожаной обуви", "Любая работа"]
+      },
+      "2026-05-31": {
+        title: "День Весак",
+        tradition: "Буддизм",
+        type: "holiday",
+        description: "Празднование Рождения, Просветления и Ухода Будды.",
+        allowed: ["Медитация", "Помощь нуждающимся", "Отказ от мясной пищи"],
+        forbidden: ["Причинение вреда живым существам", "Одурманивание ума"]
+      },
+      "2026-12-25": {
+        title: "Рождество Христово (Западная традиция)",
+        tradition: "Христианство",
+        type: "holiday",
+        description: "Празднование воплощения Сына Божия.",
+        allowed: ["Милостыня", "Семейные богослужения", "Прощение обид"],
+        forbidden: ["Тяжелый физический труд", "Бытовая суета в ущерб духу"]
+      },
+      "2026-09-22": {
+        title: "День Осеннего равноденствия",
+        tradition: "Стоицизм / Философия",
+        type: "philosophy",
+        description: "Точка баланса и подведения промежуточных итогов года.",
+        allowed: ["Утренняя настройка (Premeditatio Malorum)", "Вечерний анализ дня"],
+        forbidden: ["Трата времени на жалобы", "Поддавание эмоциональным аффектам"]
+      },
+      "2027-03-09": {
+        title: "Рамадан (Начало поста 2027)",
+        tradition: "Ислам",
+        type: "fast",
+        description: "Священный месяц строгого поста и воздержания от рассвета до заката.",
+        allowed: ["Чтение Корана", "Благотворительность", "Духовное очищение"],
+        forbidden: ["Прием пищи и воды в дневное время", "Ссоры и сквернословие"]
+      }
+    };
+
+    // =============================
+    // ЗВУКОВОЙ ДИЗАЙН И АУДИО API
+    // =============================
+    let audioCtx = null;
+    let ambientOsc = null;
+    let ambientGain = null;
+    let isAmbientPlaying = false;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function playUISound(freq = 440, type = 'sine', duration = 0.08) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function toggleAmbientSound() {
+      const type = document.getElementById('ambient-sound-select').value;
+      const btn = document.getElementById('btn-toggle-ambient');
+      const ctx = getAudioContext();
+
+      if (isAmbientPlaying) {
+        if (ambientGain) ambientGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+        setTimeout(() => { if (ambientOsc) ambientOsc.stop(); }, 500);
+        isAmbientPlaying = false;
+        btn.textContent = "Play";
+        return;
+      }
+
+      if (type === 'none') return;
+
+      ambientOsc = ctx.createOscillator();
+      ambientGain = ctx.createGain();
+
+      if (type === 'bowls') {
+        ambientOsc.type = 'sine';
+        ambientOsc.frequency.setValueAtTime(216, ctx.currentTime);
+      } else if (type === 'space') {
+        ambientOsc.type = 'triangle';
+        ambientOsc.frequency.setValueAtTime(110, ctx.currentTime);
+      } else {
+        ambientOsc.type = 'sawtooth';
+        ambientOsc.frequency.setValueAtTime(80, ctx.currentTime);
+      }
+
+      ambientGain.gain.setValueAtTime(0.001, ctx.currentTime);
+      ambientGain.gain.exponentialRampToValueAtTime(0.03, ctx.currentTime + 1);
+
+      ambientOsc.connect(ambientGain);
+      ambientGain.connect(ctx.destination);
+      ambientOsc.start();
+      isAmbientPlaying = true;
+      btn.textContent = "Stop";
+    }
+
+    // =============================
+    // ГАМИФИКАЦИЯ И УРОВНИ XP
+    // =============================
+    let userXP = parseInt(localStorage.getItem('aura_xp') || '0');
+
+    function addXP(amount) {
+      userXP += amount;
+      localStorage.setItem('aura_xp', userXP);
+      updateXPUI();
+    }
+
+    function updateXPUI() {
+      const rankText = document.getElementById('user-rank-title');
+      const xpText = document.getElementById('user-xp-text');
+      const fillBar = document.getElementById('level-bar-fill');
+
+      let rank = "Ученик";
+      let nextLevelXP = 50;
+
+      if (userXP >= 150) {
+        rank = "Мудрец";
+        nextLevelXP = 300;
+      } else if (userXP >= 80) {
+        rank = "Философ";
+        nextLevelXP = 150;
+      } else if (userXP >= 30) {
+        rank = "Искатель";
+        nextLevelXP = 80;
+      }
+
+      if (rankText) rankText.textContent = rank;
+      if (xpText) xpText.textContent = `${userXP} / ${nextLevelXP} XP`;
+      if (fillBar) fillBar.style.width = `${Math.min(100, (userXP / nextLevelXP) * 100)}%`;
+    }
+
+    // =============================
+    // ЛОГИКА ПРИЛОЖЕНИЯ
+    // =============================
+
+    let currentQuoteIndex = 0;
+    let favorites = JSON.parse(localStorage.getItem('aura_favs') || '[]');
+    let activeColor = '#4A90E2';
+
+    // Цитаты
+    function displayQuote(index) {
+      const q = philosophersData[index];
+      document.getElementById('quote-author').textContent = q.author;
+      document.getElementById('quote-text').textContent = q.text;
+      document.getElementById('quote-exp').textContent = q.exp;
+      document.getElementById('quote-trigger').classList.remove('open');
+
+      const isFav = favorites.includes(q.id);
+      const favBtn = document.getElementById('btn-fav-quote');
+      if (isFav) {
+        favBtn.classList.add('active');
+        favBtn.querySelector('i, svg')?.setAttribute('fill', '#FF2D55');
+      } else {
+        favBtn.classList.remove('active');
+        favBtn.querySelector('i, svg')?.removeAttribute('fill');
+      }
+      lucide.createIcons();
+    }
+
+    document.getElementById('btn-refresh-quote').addEventListener('click', (e) => {
+      e.stopPropagation();
+      playUISound(600);
+      currentQuoteIndex = Math.floor(Math.random() * philosophersData.length);
+      displayQuote(currentQuoteIndex);
+    });
+
+    document.getElementById('quote-trigger').addEventListener('click', () => {
+      playUISound(400);
+      document.getElementById('quote-trigger').classList.toggle('open');
+    });
+
+    document.getElementById('btn-fav-quote').addEventListener('click', () => {
+      playUISound(800);
+      const q = philosophersData[currentQuoteIndex];
+      const idx = favorites.indexOf(q.id);
+      if (idx > -1) favorites.splice(idx, 1);
+      else favorites.push(q.id);
+      localStorage.setItem('aura_favs', JSON.stringify(favorites));
+      displayQuote(currentQuoteIndex);
+      renderFavorites();
+    });
+
+    function exportQuoteImage() {
+      const q = philosophersData[currentQuoteIndex];
+      document.getElementById('story-quote-target').textContent = q.text;
+      document.getElementById('story-author-target').textContent = `— ${q.author}`;
+
+      const wrapper = document.getElementById('story-card-node');
+      document.getElementById('story-canvas-container').style.display = 'block';
+
+      html2canvas(wrapper).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `aura-quote-${q.author}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+        document.getElementById('story-canvas-container').style.display = 'none';
+      });
+    }
+
+    function openPhilosopherModal(q) {
+      document.getElementById('modal-philosopher-name').textContent = q.author;
+      document.getElementById('modal-philosopher-era').textContent = q.era;
+      document.getElementById('modal-philosopher-bio').textContent = q.bio;
+      document.getElementById('modal-philosopher-book').textContent = `Главный труд: ${q.book}`;
+      document.getElementById('philosopher-modal').classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    document.getElementById('btn-about-philosopher').addEventListener('click', () => {
+      openPhilosopherModal(philosophersData[currentQuoteIndex]);
+    });
+
+    document.getElementById('philosopher-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'philosopher-modal' || e.target.closest('#btn-close-modal')) {
+        closeModal('philosopher-modal');
+      }
+    });
+
+    // Трекер привычек
+    function getTodayKey() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    function loadHabits() {
+      const habits = JSON.parse(localStorage.getItem(`habits_${getTodayKey()}`) || '{}');
+      ['meditation', 'reading', 'sport', 'gratitude'].forEach(h => {
+        const el = document.getElementById(`check-${h}`).parentElement.parentElement;
+        if (habits[h]) el.classList.add('done');
+        else el.classList.remove('done');
+      });
+    }
+
+    function toggleHabit(habitKey) {
+      playUISound(500);
+      const habits = JSON.parse(localStorage.getItem(`habits_${getTodayKey()}`) || '{}');
+      habits[habitKey] = !habits[habitKey];
+      localStorage.setItem(`habits_${getTodayKey()}`, JSON.stringify(habits));
+      if (habits[habitKey]) addXP(5);
+      loadHabits();
+    }
+
+    // Быстрая Рефлексия
+    function loadReflection() {
+      const saved = localStorage.getItem(`reflection_${getTodayKey()}`) || '';
+      document.getElementById('reflection-input').value = saved;
+    }
+
+    function saveQuickReflection() {
+      const text = document.getElementById('reflection-input').value;
+      localStorage.setItem(`reflection_${getTodayKey()}`, text);
+      addXP(10);
+      alert('Запись рефлексии сохранена!');
+    }
+
+    // =============================
+    // ЭКРАН ПОЛНОЦЕННОЙ РЕФЛЕКСИИ
+    // =============================
+    let selectedMood = '🧘';
+    let selectedTags = [];
+
+    function selectMood(el) {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedMood = el.getAttribute('data-mood');
+      playUISound(450);
+    }
+
+    function toggleTag(el, tag) {
+      el.classList.toggle('active');
+      if (selectedTags.includes(tag)) {
+        selectedTags = selectedTags.filter(t => t !== tag);
+      } else {
+        selectedTags.push(tag);
+      }
+      playUISound(350);
+    }
+
+    function saveFullReflection() {
+      const text = document.getElementById('full-reflection-text').value.trim();
+      if (!text) return;
+
+      const archive = JSON.parse(localStorage.getItem('aura_reflections_archive') || '[]');
+      const newEntry = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString(),
+        text: text,
+        mood: selectedMood,
+        tags: [...selectedTags]
+      };
+
+      archive.unshift(newEntry);
+      localStorage.setItem('aura_reflections_archive', JSON.stringify(archive));
+      document.getElementById('full-reflection-text').value = '';
+      addXP(15);
+      renderReflectionArchive();
+      alert("Рефлексия добавлена в архив!");
+    }
+
+    function renderReflectionArchive() {
+      const container = document.getElementById('reflection-archive-list');
+      const archive = JSON.parse(localStorage.getItem('aura_reflections_archive') || '[]');
+
+      if (archive.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-secondary);">Архив пока пуст</div>`;
+        return;
+      }
+
+      container.innerHTML = archive.map(item => `
+        <div class="reflection-history-item">
+          <div class="reflection-history-header">
+            <span>${item.date} ${item.mood}</span>
+            <span>${(item.tags || []).join(' ')}</span>
+          </div>
+          <div style="font-size:12.5px; color:var(--text-main); line-height:1.4;">${item.text}</div>
+        </div>
+      `).join('');
+    }
+
+    function exportReflectionData() {
+      const archive = localStorage.getItem('aura_reflections_archive') || '[]';
+      const blob = new Blob([archive], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `aura-reflections-${getTodayKey()}.json`;
+      a.click();
+    }
+
+    // Таймер Помодоро с Web Audio API
+    let focusDuration = 25 * 60;
+    let currentTime = focusDuration;
+    let timerId = null;
+
+    function renderTime() {
+      const mins = Math.floor(currentTime / 60).toString().padStart(2, '0');
+      const secs = (currentTime % 60).toString().padStart(2, '0');
+      document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+    }
+
+    function setTimerPreset(workMins, breakMins, label, btn) {
+      clearInterval(timerId);
+      timerId = null;
+      document.getElementById('btn-timer-start').textContent = "Старт";
+      
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+
+      focusDuration = workMins * 60;
+      currentTime = focusDuration;
+      document.getElementById('timer-label').textContent = label;
+      renderTime();
+    }
+
+    document.getElementById('btn-timer-start').addEventListener('click', () => {
+      const btn = document.getElementById('btn-timer-start');
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+        btn.textContent = "Старт";
+      } else {
+        btn.textContent = "Пауза";
+        timerId = setInterval(() => {
+          currentTime--;
+          renderTime();
+          if (currentTime <= 0) {
+            clearInterval(timerId);
+            timerId = null;
+            playUISound(587, 'sine', 1.0);
+            alert("Сессия завершена!");
+            addXP(20);
+            currentTime = focusDuration;
+            renderTime();
+            btn.textContent = "Старт";
+          }
+        }, 1000);
+      }
+    });
+
+    document.getElementById('btn-timer-reset').addEventListener('click', () => {
+      clearInterval(timerId);
+      timerId = null;
+      currentTime = focusDuration;
+      renderTime();
+      document.getElementById('btn-timer-start').textContent = "Старт";
+    });
+
+    // Календарь + Религиозные События
+    let calendarDate = new Date();
+    let selectedDateKey = getFormattedDate(new Date());
+
+    function getFormattedDate(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function renderCalendar() {
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+      document.getElementById('month-year-title').textContent = `${monthNames[month]} ${year}`;
+
+      const filter = document.getElementById('confession-filter').value;
+
+      const weekdaysContainer = document.getElementById('calendar-weekdays');
+      weekdaysContainer.innerHTML = '';
+      ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].forEach(w => {
+        const d = document.createElement('div');
+        d.textContent = w;
+        weekdaysContainer.appendChild(d);
+      });
+
+      const calendarDays = document.getElementById('calendar-days');
+      calendarDays.innerHTML = '';
+
+      const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        calendarDays.appendChild(document.createElement('div'));
+      }
+
+      const todayKey = getFormattedDate(new Date());
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('day-cell');
+        dayCell.textContent = day;
+
+        const cellDateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        if (cellDateKey === todayKey) dayCell.classList.add('today');
+        if (cellDateKey === selectedDateKey) dayCell.classList.add('selected');
+
+        const ev = spiritualCalendar[cellDateKey];
+        if (ev && (filter === 'all' || ev.tradition === filter)) {
+          dayCell.classList.add('event-day');
+        }
+
+        const tasks = JSON.parse(localStorage.getItem(`tasks_${cellDateKey}`) || '[]');
+        if (tasks.length > 0) {
+          const dotsContainer = document.createElement('div');
+          dotsContainer.className = 'day-dots';
+          tasks.slice(0, 3).forEach(t => {
+            const dot = document.createElement('div');
+            dot.className = 'day-dot';
+            dot.style.background = t.color || 'var(--accent-color)';
+            dotsContainer.appendChild(dot);
+          });
+          dayCell.appendChild(dotsContainer);
+        }
+
+        dayCell.addEventListener('click', () => {
+          playUISound(300);
+          selectedDateKey = cellDateKey;
+          renderCalendar();
+          loadDayTasks();
+          renderSpiritualEvent();
+        });
+
+        calendarDays.appendChild(dayCell);
+      }
+    }
+
+    function renderSpiritualEvent() {
+      const container = document.getElementById('spiritual-event-view');
+      const eventData = spiritualCalendar[selectedDateKey];
+      const filter = document.getElementById('confession-filter').value;
+
+      if (!eventData || (filter !== 'all' && eventData.tradition !== filter)) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="event-card">
+          <div class="event-title">
+            <span>${eventData.title}</span>
+            <span class="event-tradition">${eventData.tradition}</span>
+          </div>
+          <div class="event-desc">${eventData.description}</div>
+          
+          <div class="event-section-title" style="color: #34C759;">Что рекомендуется делать:</div>
+          <ul class="event-list">
+            ${eventData.allowed.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+
+          <div class="event-section-title" style="color: #FF3B30; margin-top:8px;">Ограничения / Чего делать нельзя:</div>
+          <ul class="event-list">
+            ${eventData.forbidden.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+
+    document.getElementById('prev-month').addEventListener('click', () => {
+      calendarDate.setMonth(calendarDate.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+      calendarDate.setMonth(calendarDate.getMonth() + 1);
+      renderCalendar();
+    });
+
+    function loadDayTasks() {
+      document.getElementById('selected-date-title').textContent = `Записи: ${selectedDateKey}`;
+      const taskList = document.getElementById('day-task-list');
+      taskList.innerHTML = '';
+
+      const tasks = JSON.parse(localStorage.getItem(`tasks_${selectedDateKey}`) || '[]');
+
+      tasks.forEach((task, idx) => {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.style.borderLeftColor = task.color || '#4A90E2';
+        li.innerHTML = `
+          <div class="task-info">
+            <span class="task-time">${task.timeStart} — ${task.timeEnd}</span>
+            <span>${task.text}</span>
+          </div>
+          <i data-lucide="trash-2" onclick="removeTask(${idx})"></i>
+        `;
+        taskList.appendChild(li);
+      });
+      lucide.createIcons();
+    }
+
+    // Выбор цвета задачи
+    document.querySelectorAll('#color-picker .color-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('#color-picker .color-opt').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        activeColor = opt.getAttribute('data-color');
+      });
+    });
+
+    document.getElementById('btn-add-task').addEventListener('click', () => {
+      const input = document.getElementById('new-task-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const timeStart = document.getElementById('time-start').value;
+      const timeEnd = document.getElementById('time-end').value;
+
+      const tasks = JSON.parse(localStorage.getItem(`tasks_${selectedDateKey}`) || '[]');
+      tasks.push({ text: val, timeStart, timeEnd, color: activeColor });
+
+      localStorage.setItem(`tasks_${selectedDateKey}`, JSON.stringify(tasks));
+      input.value = '';
+      loadDayTasks();
+      renderCalendar();
+    });
+
+    window.removeTask = function(index) {
+      const tasks = JSON.parse(localStorage.getItem(`tasks_${selectedDateKey}`) || '[]');
+      tasks.splice(index, 1);
+      if (tasks.length > 0) {
+        localStorage.setItem(`tasks_${selectedDateKey}`, JSON.stringify(tasks));
+      } else {
+        localStorage.removeItem(`tasks_${selectedDateKey}`);
+      }
+      loadDayTasks();
+      renderCalendar();
+    };
+
+    // Сравнение религий
+    function updateComparison() {
+      const r1Key = document.getElementById('rel-1').value;
+      const r2Key = document.getElementById('rel-2').value;
+
+      const r1 = comparisonData[r1Key];
+      const r2 = comparisonData[r2Key];
+
+      const resDiv = document.getElementById('compare-result');
+      resDiv.innerHTML = `
+        <div class="compare-row"><b>${r1.name}</b><b>${r2.name}</b></div>
+        <div class="compare-row"><span><b>Концепция:</b> ${r1.god}</span><span><b>Концепция:</b> ${r2.god}</span></div>
+        <div class="compare-row"><span><b>Текст:</b> ${r1.text}</span><span><b>Текст:</b> ${r2.text}</span></div>
+        <div class="compare-row"><span><b>Цель:</b> ${r1.goal}</span><span><b>Цель:</b> ${r2.goal}</span></div>
+        <div class="compare-row"><span><b>Правила:</b> ${r1.rules}</span><span><b>Правила:</b> ${r2.rules}</span></div>
+        <div class="compare-row"><span><b>Запреты:</b> ${r1.forbidden}</span><span><b>Запреты:</b> ${r2.forbidden}</span></div>
+      `;
+    }
+
+    // Рендеринг Глоссария
+    function renderGlossary(items) {
+      const container = document.getElementById('glossary-container');
+      container.innerHTML = items.map(g => `
+        <div class="glossary-item">
+          <div class="glossary-term">${g.term}</div>
+          <div class="glossary-def">${g.def}</div>
+        </div>
+      `).join('');
+    }
+
+    function filterGlossary() {
+      const q = document.getElementById('glossary-search').value.toLowerCase();
+      const filtered = glossaryTerms.filter(g => g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q));
+      renderGlossary(filtered);
+    }
+
+    // Уроки & Интерактив
+    function openLessonModal(id) {
+      const l = lessonsData[id];
+      if (!l) return;
+
+      document.getElementById('modal-lesson-title').textContent = l.title;
+      document.getElementById('modal-lesson-content').textContent = l.text;
+      
+      document.getElementById('flashcard-front').textContent = l.cardFront;
+      document.getElementById('flashcard-back').textContent = l.cardBack;
+      document.getElementById('flashcard-back').style.display = 'none';
+
+      const qContainer = document.getElementById('quiz-container');
+      qContainer.innerHTML = '';
+      l.quiz.forEach(q => {
+        const qDiv = document.createElement('div');
+        qDiv.innerHTML = `<div style="font-size:12px; margin-bottom:6px;">${q.q}</div>`;
+        q.opts.forEach((opt, idx) => {
+          const optDiv = document.createElement('div');
+          optDiv.className = 'quiz-opt';
+          optDiv.textContent = opt;
+          optDiv.onclick = function() {
+            if (idx === q.correct) {
+              optDiv.classList.add('correct');
+              playUISound(700);
+            } else {
+              optDiv.classList.add('wrong');
+              playUISound(200);
+            }
+          };
+          qDiv.appendChild(optDiv);
+        });
+        qContainer.appendChild(qDiv);
+      });
+
+      document.getElementById('lesson-modal').classList.add('active');
+    }
+
+    function flipFlashcard() {
+      const back = document.getElementById('flashcard-back');
+      back.style.display = back.style.display === 'none' ? 'block' : 'none';
+      playUISound(500);
+    }
+
+    function completeLesson() {
+      closeModal('lesson-modal');
+      addXP(10);
+      alert('Урок пройден! +10 XP добавлено.');
+    }
+
+    // =============================
+    // ГЛОБАЛЬНАЯ ПОИСКОВАЯ СИСТЕМА
+    // =============================
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const resultsDiv = document.getElementById('search-results');
+      resultsDiv.innerHTML = '';
+
+      if (!q) return;
+
+      let html = '';
+
+      const foundQuotes = philosophersData.filter(p => p.text.toLowerCase().includes(q) || p.author.toLowerCase().includes(q) || p.exp.toLowerCase().includes(q));
+      if (foundQuotes.length) {
+        html += `<div class="search-cat-title">Цитаты Philosophers</div>`;
+        foundQuotes.forEach(fq => {
+          html += `<div class="search-item" onclick="closeSearchAndGo('view-dashboard')"><b>${fq.author}:</b> ${fq.text}</div>`;
+        });
+      }
+
+      const foundLessons = Object.values(lessonsData).filter(l => l.title.toLowerCase().includes(q) || l.text.toLowerCase().includes(q));
+      if (foundLessons.length) {
+        html += `<div class="search-cat-title">Уроки Религиоведения</div>`;
+        foundLessons.forEach(fl => {
+          html += `<div class="search-item" onclick="closeSearchAndGo('view-course')"><b>${fl.title}</b></div>`;
+        });
+      }
+
+      const reflections = JSON.parse(localStorage.getItem('aura_reflections_archive') || '[]');
+      const foundReflections = reflections.filter(r => r.text.toLowerCase().includes(q));
+      if (foundReflections.length) {
+        html += `<div class="search-cat-title">Записи Рефлексии</div>`;
+        foundReflections.forEach(fr => {
+          html += `<div class="search-item" onclick="closeSearchAndGo('view-reflection')">${fr.date}: ${fr.text}</div>`;
+        });
+      }
+
+      resultsDiv.innerHTML = html || `<div style="color:var(--text-secondary);">Ничего не найдено</div>`;
+    });
+
+    function closeSearchAndGo(viewId) {
+      document.getElementById('search-overlay').classList.remove('active');
+      document.getElementById(viewId)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function generateCertificate() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#1A1A1E';
+      ctx.fillRect(0, 0, 600, 400);
+
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(20, 20, 560, 360);
+
+      ctx.fillStyle = '#FFD700';
+      ctx.font = '30px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('СЕРТИФИКАТ AURA', 300, 100);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '16px sans-serif';
+      ctx.fillText('Настоящим подтверждается прохождение модуля', 300, 160);
+      ctx.fillText('Религиоведение & Академическая Философия', 300, 200);
+
+      ctx.fillStyle = '#8E8E93';
+      ctx.font = '12px sans-serif';
+      ctx.fillText(`Дата выдачи: ${new Date().toLocaleDateString()}`, 300, 280);
+
+      const link = document.createElement('a');
+      link.download = 'aura-certificate.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+
+    // Избранное
+    function renderFavorites() {
+      const container = document.getElementById('favorites-list');
+      container.innerHTML = '';
+
+      if (favorites.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:40px 0; font-size:13px;">У вас пока нет избранных цитат</div>`;
+        return;
+      }
+
+      favorites.forEach(id => {
+        const q = philosophersData.find(item => item.id === id);
+        if (!q) return;
+
+        const card = document.createElement('div');
+        card.className = 'fav-card';
+        card.innerHTML = `
+          <div class="fav-card-header">
+            <div>
+              <div class="fav-author-name">${q.author}</div>
+              <div class="fav-author-era">${q.era}</div>
+            </div>
+            <i data-lucide="trash-2" class="fav-card-delete" onclick="removeFavorite(${q.id})"></i>
+          </div>
+          <div class="fav-book-badge">Главный труд: ${q.book}</div>
+          <div class="fav-quote-text">${q.text}</div>
+          <div class="fav-exp-toggle" onclick="toggleFavExp(this)">
+            <span>Объяснение</span>
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i>
+          </div>
+          <div class="fav-exp-wrapper">
+            <div class="fav-exp-content">${q.exp}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    window.toggleFavExp = function(element) {
+      const wrapper = element.nextElementSibling;
+      wrapper.classList.toggle('open');
+    };
+
+    window.removeFavorite = function(id) {
+      const idx = favorites.indexOf(id);
+      if (idx > -1) {
+        favorites.splice(idx, 1);
+        localStorage.setItem('aura_favs', JSON.stringify(favorites));
+        renderFavorites();
+        displayQuote(currentQuoteIndex);
+      }
+    };
+
+    // Навигация и Темы
+    const themeToggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('aura_theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('aura_theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('aura_theme', 'light');
+      }
+    });
+
+    const navItems = document.querySelectorAll('.nav-item');
+    const content = document.getElementById('main-content');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        playUISound(350);
+        const targetId = item.getAttribute('data-target');
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+      });
+    });
+
+    content.addEventListener('scroll', () => {
+      const width = content.clientWidth;
+      if (!width) return;
+      const activeIndex = Math.round(content.scrollLeft / width);
+      navItems.forEach((item, index) => {
+        if (index === activeIndex) {
+          item.classList.add('active');
+          if (item.getAttribute('data-target') === 'view-favorites') renderFavorites();
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    });
+
+    document.getElementById('btn-quick-settings').addEventListener('click', () => {
+      document.getElementById('view-settings')?.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    });
+
+    document.getElementById('btn-achievements').addEventListener('click', () => {
+      document.getElementById('badges-modal').classList.add('active');
+    });
+
+    // Окно поиска
+    document.getElementById('btn-search').addEventListener('click', () => {
+      document.getElementById('search-overlay').classList.add('active');
+    });
+    document.getElementById('btn-close-search').addEventListener('click', () => {
+      document.getElementById('search-overlay').classList.remove('active');
+    });
+
+    // Инициализация при старте
+    setLanguage(currentLang);
+    displayQuote(0);
+    loadHabits();
+    loadReflection();
+    renderCalendar();
+    loadDayTasks();
+    renderSpiritualEvent();
+    renderFavorites();
+    updateComparison();
+    renderGlossary(glossaryTerms);
+    renderReflectionArchive();
+    updateXPUI();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
