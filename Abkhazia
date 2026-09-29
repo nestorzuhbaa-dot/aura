@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трансфер и Экскурсии по Абхазии | Premium Travel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    
+    <!-- React & ReactDOM CDN for MorphGallery WebGL component -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        siteBg: '#e9e9e4',
+                        cardBg: '#ffffff',
+                        darkText: '#111111',
+                        mutedText: '#666666',
+                        borderLight: '#d5d5d0',
+                        accentBlack: '#000000',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: theme('colors.siteBg');
+            color: theme('colors.darkText');
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-weight-display { font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; }
+        .font-weight-heading { font-weight: 500; letter-spacing: -0.01em; line-height: 1.2; }
+        .font-weight-body { font-weight: 400; line-height: 1.6; }
+        
+        .mercury-header {
+            background-color: #e9e9e4;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-section { background-color: #000; color: #fff; }
+
+        .clean-card {
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .clean-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+
+        .btn-white { background-color: #fff; color: #000; border-radius: 40px; transition: background-color 0.3s ease; }
+        .btn-white:hover { background-color: #f0f0f0; }
+        .btn-outline-white { background-color: transparent; border: 1px solid #fff; color: #fff; border-radius: 40px; transition: all 0.3s ease; }
+        .btn-outline-white:hover { background-color: #fff; color: #000; }
+        
+        .btn-outline-dark { background-color: transparent; border: 1px solid #111; color: #111; border-radius: 40px; transition: all 0.3s ease; }
+        .btn-outline-dark:hover { background-color: #111; color: #fff; }
+
+        .reveal-element { opacity: 0; transform: translateY(40px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-element.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        .vortex-stage { perspective: 1200px; perspective-origin: 50% 50%; user-select: none; touch-action: pan-y; }
+        .vortex-carousel { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.1s linear; }
+        .vortex-card {
+            position: absolute; left: 50%; top: 50%; width: 260px; height: 360px; margin-left: -130px; margin-top: -180px;
+            border-radius: 12px; overflow: hidden; background-color: #fff; cursor: pointer; backface-visibility: visible;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); transition: transform 0.3s ease;
+        }
+        @media (min-width: 640px) { .vortex-card { width: 320px; height: 440px; margin-left: -160px; margin-top: -220px; } }
+        
+        .enhanced-img { filter: contrast(1.08) saturate(1.15) brightness(1.02); image-rendering: high-quality; transform: translateZ(0); }
+
+        .swipe-container { scrollbar-width: none; -ms-overflow-style: none; }
+        .swipe-container::-webkit-scrollbar { display: none; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+        /* Smooth Expanding Section */
+        .expandable-container {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .expandable-container.expanded {
+            grid-template-rows: 1fr;
+        }
+        .expandable-inner {
+            overflow: hidden;
+        }
+        
+        /* Auto-resize textarea */
+        textarea.auto-resize {
+            resize: none;
+            overflow: hidden;
+            min-height: 40px;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <header class="fixed top-0 left-0 right-0 z-50 mercury-header px-4 sm:px-8 py-4">
+        <div class="max-w-[1400px] mx-auto flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-2 group">
+                <i class="fa-solid fa-layer-group text-lg text-darkText"></i>
+                <span class="text-xl font-weight-heading tracking-tight text-darkText">Abkhazia</span>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-8 text-sm text-mutedText font-medium tracking-wide">
+                <a href="#services" class="hover:text-darkText transition-colors duration-300">Услуги</a>
+                <a href="#transfers" class="hover:text-darkText transition-colors duration-300">Трансфер</a>
+                <a href="#cars" class="hover:text-darkText transition-colors duration-300">Автопарк</a>
+                <a href="#live-feed" class="hover:text-darkText transition-colors duration-300">Live</a>
+                <a href="#tours" class="hover:text-darkText transition-colors duration-300">Экскурсии</a>
+                <a href="#vortex-gallery" class="hover:text-darkText transition-colors duration-300">Галерея</a>
+            </nav>
+
+            <div class="flex items-center space-x-6 text-sm font-medium">
+                <button onclick="toggleAdminModal()" class="text-mutedText hover:text-darkText transition-colors hidden sm:block">
+                    Админка
+                </button>
+                <a href="#contacts" class="text-darkText hover:opacity-70 transition-opacity">
+                    Контакты
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section relative w-full h-[100svh] min-h-[600px] flex items-center overflow-hidden pt-16">
+        <div class="absolute inset-0 z-0">
+            <div id="morphGalleryRoot" class="w-full h-full"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30 z-10 pointer-events-none"></div>
+        </div>
+        <div class="relative z-20 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full mt-10">
+            <div class="max-w-4xl reveal-element">
+                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[100px] font-weight-display tracking-tighter leading-[0.95] text-white">
+                    Путешествуйте <br>
+                    <span class="font-light italic text-white/90">с Удовольствием</span>
+                </h1>
+                <p class="mt-8 text-white/80 text-lg md:text-xl max-w-2xl font-weight-body leading-relaxed">
+                    Индивидуальный подход. Экскурсии по всей Абхазии, трансфер из аэропортов Сочи и Сухума.
+                </p>
+                <div class="flex flex-wrap gap-4 mt-12">
+                    <a href="https://wa.me/79409368390" target="_blank" class="btn-white px-8 py-4 text-sm font-medium flex items-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="#tours" class="btn-outline-white px-8 py-4 text-sm font-medium">
+                        Наши маршруты
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-24 relative z-10 border-t border-borderLight/30">
+        <!-- Содержимое услуг без изменений -->
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16 reveal-element">
+                <h2 class="text-4xl md:text-5xl font-weight-display text-darkText">Услуги и Преимущества</h2>
+                <p class="text-mutedText mt-4 text-lg font-weight-body max-w-3xl">Всё для вашего идеального, стильного и безопасного путешествия по Абхазии.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="clean-card p-10 reveal-element">
+                    <div class="text-3xl text-darkText mb-6"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <h3 class="text-xl font-weight-heading text-darkText mb-3">Экскурсии</h3>
+                    <p class="text-mutedText font-weight-body">Увлекательные туры и персонализированные автомаршруты по всем живописным уголкам Абхазии.</p>
+                </div>
+                <div class="clean-card p-10 reveal-element delay-100">
+                    <div class="text-3xl text-darkText mb-6"><i class="fa-solid fa-van-shuttle"></i></div>
+                    <h3 class="text-xl font-weight-heading text-darkText mb-3">Трансфер</h3>
+                    <p class="text-mutedText font-weight-body">Встреча из аэропортов Сочи и Сухума, подача вовремя в любую точку Страны Души.</p>
+                </div>
+                <div class="clean-card p-10 reveal-element delay-200">
+                    <div class="text-3xl text-darkText mb-6"><i class="fa-solid fa-people-group"></i></div>
+                    <h3 class="text-xl font-weight-heading text-darkText mb-3">Мероприятия</h3>
+                    <p class="text-mutedText font-weight-body">Обслуживание свадеб, торжеств, VIP-делегаций и корпоративных поездок на высшем уровне.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- АВТОПАРК СО СПИСКОМ -->
+    <section id="cars" class="py-24 relative z-10 border-t border-borderLight/30 overflow-hidden bg-white">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            
+            <div class="w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20 mb-12">
+                <div class="w-full lg:w-1/2 reveal-element">
+                    <h2 class="text-4xl md:text-5xl font-weight-display text-darkText mb-6">Наши Машины</h2>
+                    <p class="text-mutedText text-lg font-weight-body mb-8 leading-relaxed">
+                        Мы предоставляем только современные и надежные автомобили. Нажмите на фото или кнопку ниже, чтобы раскрыть весь список автомобилей, посмотреть фотографии и прочитать детальное описание.
+                    </p>
+                    <button onclick="toggleCarsList()" class="btn-outline-dark px-8 py-3 text-sm font-medium flex items-center space-x-2">
+                        <span>Показать весь автопарк</span>
+                        <i id="carsChevron" class="fa-solid fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                </div>
+
+                <!-- Зона плавной смены фотографий (Слайдер), кликабельная -->
+                <div onclick="toggleCarsList()" class="w-full lg:w-1/2 h-[400px] md:h-[450px] relative rounded-2xl overflow-hidden reveal-element delay-100 shadow-2xl bg-siteBg border border-borderLight cursor-pointer group" id="carShowcaseContainer">
+                    <!-- Генерируется через JS -->
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors z-20"></div>
+                </div>
+            </div>
+
+            <!-- РАСКРЫВАЮЩИЙСЯ СПИСОК МАШИН -->
+            <div id="carsExpandedWrapper" class="expandable-container w-full">
+                <div class="expandable-inner">
+                    <div class="w-full border-t border-borderLight/50 pt-12 pb-6">
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="text-2xl font-weight-heading text-darkText">Список автомобилей</h3>
+                            <button onclick="addNewCar()" class="text-sm font-medium text-darkText bg-siteBg hover:bg-gray-200 px-5 py-2.5 rounded-full transition-colors flex items-center space-x-2 border border-borderLight">
+                                <i class="fa-solid fa-plus"></i> <span>Добавить машину</span>
+                            </button>
+                        </div>
+                        
+                        <div id="carsListContainer" class="flex flex-col gap-10">
+                            <!-- Контент машин рендерится здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- НОВЫЙ РАЗДЕЛ: ЖИВЫЕ МОМЕНТЫ (ВИДЕО/ФОТО) -->
+    <section id="live-feed" class="py-24 relative z-10 border-t border-borderLight/30 bg-siteBg overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16 reveal-element text-center">
+                <h2 class="text-4xl md:text-5xl font-weight-display text-darkText">Живые моменты</h2>
+                <p class="text-mutedText mt-4 text-lg font-weight-body">Атмосфера наших поездок. Фотографии и видео из Абхазии.</p>
+            </div>
+            
+            <div id="liveFeedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max">
+                <!-- Контент живой ленты генерируется через JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Остальные секции (Трансфер, Экскурсии, Галерея, Контакты) -->
+    <section id="transfers" class="py-24 relative z-10 border-t border-borderLight/30 bg-white">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16 reveal-element">
+                <h2 class="text-4xl md:text-5xl font-weight-display text-darkText">Стоимость Поездок</h2>
+                <p class="text-mutedText mt-4 text-lg font-weight-body max-w-3xl">Нажмите на маршрут, чтобы посмотреть фотографии и забронировать.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="reveal-element">
+                    <div class="flex items-center space-x-4 mb-8">
+                        <div class="w-12 h-12 rounded-full bg-siteBg border border-borderLight flex items-center justify-center text-darkText text-xl">
+                            <i class="fa-solid fa-plane-arrival"></i>
+                        </div>
+                        <h3 class="text-2xl font-weight-heading text-darkText">Из аэропорта Сочи</h3>
+                    </div>
+                    <div id="sochiRoutes" class="space-y-3"></div>
+                </div>
+                <div class="reveal-element delay-100">
+                    <div class="flex items-center space-x-4 mb-8">
+                        <div class="w-12 h-12 rounded-full bg-siteBg border border-borderLight flex items-center justify-center text-darkText text-xl">
+                            <i class="fa-solid fa-plane-arrival"></i>
+                        </div>
+                        <h3 class="text-2xl font-weight-heading text-darkText">Из аэропорта Сухума</h3>
+                    </div>
+                    <div id="sukhumRoutes" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tours" class="py-24 relative z-10 border-t border-borderLight/30 bg-[#f4f3ef]">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal-element">
+                <h2 class="text-4xl md:text-5xl font-weight-display text-darkText">Экскурсии</h2>
+            </div>
+            <div id="toursList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <section id="vortex-gallery" class="py-24 relative z-10 overflow-hidden bg-siteBg border-t border-borderLight/30">
+        <div class="w-full flex justify-center mb-16 reveal-element">
+            <h2 class="text-5xl sm:text-6xl md:text-7xl font-weight-display text-darkText tracking-tight text-center">Галерея</h2>
+        </div>
+        <div class="vortex-stage h-[500px] sm:h-[600px] relative flex items-center justify-center reveal-element delay-100">
+            <div id="vortexCarousel" class="vortex-carousel"></div>
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center space-x-6 bg-white/70 backdrop-blur-md border border-borderLight px-8 py-3 rounded-pill shadow-lg">
+                <button onclick="rotateVortex(-1)" class="text-darkText hover:text-mutedText transition-colors"><i class="fa-solid fa-arrow-left"></i></button>
+                <span class="text-xs uppercase text-darkText tracking-widest font-semibold">Свайпайте</span>
+                <button onclick="rotateVortex(1)" class="text-darkText hover:text-mutedText transition-colors"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacts" class="py-24 relative z-10 border-t border-borderLight/30 bg-white">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 reveal-element">
+            <div class="bg-siteBg rounded-xl border border-borderLight p-10 sm:p-16 text-center max-w-4xl mx-auto shadow-sm">
+                <h2 class="text-4xl md:text-5xl font-weight-display text-darkText">Забронировать Поездку</h2>
+                <div class="flex flex-wrap justify-center gap-4 mt-12">
+                    <a href="https://wa.me/79409368390" class="bg-black text-white px-8 py-4 rounded-full text-sm font-medium flex items-center space-x-2">
+                        <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-sm text-mutedText border-t border-borderLight/30">
+        <p>© 2026 Трансфер и Экскурсии по Абхазии | Страна Души.</p>
+    </footer>
+
+    <!-- Модальные окна (Маршруты, Лайтбокс) -->
+    <div id="routeModal" class="fixed inset-0 z-[100] bg-siteBg/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white max-w-5xl w-full p-8 rounded-xl border border-borderLight shadow-2xl max-h-[90vh] flex flex-col relative">
+            <button onclick="closeRouteModal()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-siteBg hover:bg-gray-200 flex items-center justify-center z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="mb-6 shrink-0"><h3 id="modalTitle" class="text-3xl font-weight-heading text-darkText"></h3><p id="modalPrice" class="text-xl text-mutedText mt-2"></p></div>
+            <div class="flex-1 overflow-y-auto relative flex flex-col">
+                <div class="flex items-center justify-between mb-4"><h4 class="text-sm font-medium uppercase">Фотографии</h4>
+                    <label class="cursor-pointer border px-5 py-2.5 rounded-full text-sm hover:bg-siteBg flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Добавить</span><input type="file" accept="image/*" multiple class="hidden" onchange="uploadRoutePhotos(event)">
+                    </label>
+                </div>
+                <div id="modalGallery" class="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory swipe-container h-64 md:h-[400px]"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightboxModal" class="fixed inset-0 z-[110] bg-black/95 hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0" onclick="closeLightbox()">
+        <img id="lightboxImg" class="max-w-full max-h-[90vh] object-contain scale-95 transition-transform duration-300" src="">
+    </div>
+
+    <!-- ОБНОВЛЕННАЯ АДМИН-ПАНЕЛЬ С ВКЛАДКАМИ -->
+    <div id="adminModal" class="fixed inset-0 z-[100] bg-siteBg/95 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white max-w-6xl w-full p-8 rounded-xl border border-borderLight shadow-xl flex flex-col h-[90vh] relative">
+            
+            <div class="flex justify-between items-center border-b border-borderLight/50 pb-6 mb-6 shrink-0">
+                <h3 class="text-2xl font-weight-heading text-darkText flex items-center space-x-3">
+                    <i class="fa-solid fa-sliders text-mutedText"></i><span>Управление контентом</span>
+                </h3>
+                <button onclick="toggleAdminModal()" class="w-10 h-10 rounded-full bg-siteBg hover:bg-gray-200 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Вкладки админки -->
+            <div class="flex space-x-4 mb-6 border-b border-borderLight/50 pb-2 overflow-x-auto swipe-container shrink-0">
+                <button onclick="switchAdminTab('tab-main')" class="admin-tab-btn active px-4 py-2 text-sm font-medium border-b-2 border-black text-black">Главный Фон</button>
+                <button onclick="switchAdminTab('tab-gallery')" class="admin-tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-mutedText hover:text-black">3D Галерея</button>
+                <button onclick="switchAdminTab('tab-live')" class="admin-tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-mutedText hover:text-black">Живая Лента (Live)</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                
+                <!-- Таб: Главный фон -->
+                <div id="tab-main" class="admin-tab-content space-y-6">
+                    <div class="bg-siteBg p-6 rounded-xl border border-borderLight">
+                        <h4 class="font-medium text-darkText mb-4">Фото для анимации фона (Hero)</h4>
+                        <label class="inline-block border border-dashed border-darkText px-6 py-3 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
+                            <i class="fa-solid fa-upload mr-2"></i> Загрузить фото
+                            <input type="file" accept="image/*" multiple class="hidden" onchange="handleFileUpload(event)">
+                        </label>
+                        <div id="adminCarouselList" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Таб: 3D Галерея -->
+                <div id="tab-gallery" class="admin-tab-content hidden space-y-6">
+                    <div class="bg-siteBg p-6 rounded-xl border border-borderLight">
+                        <h4 class="font-medium text-darkText mb-4">Фотографии для 3D Галереи-Карусели</h4>
+                        <label class="inline-block border border-dashed border-darkText px-6 py-3 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
+                            <i class="fa-solid fa-images mr-2"></i> Добавить в галерею
+                            <input type="file" accept="image/*" multiple class="hidden" onchange="handleGalleryUpload(event)">
+                        </label>
+                        <div id="adminGalleryList" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
+                    </div>
+                </div>
+
+                <!-- Таб: Живая лента -->
+                <div id="tab-live" class="admin-tab-content hidden space-y-6">
+                    <div class="bg-siteBg p-6 rounded-xl border border-borderLight">
+                        <h4 class="font-medium text-darkText mb-2">Живые моменты (Фото и Видео)</h4>
+                        <p class="text-sm text-mutedText mb-4">Загружайте красивые видео (mp4) и фото. Они будут плавно появляться при скролле.</p>
+                        <label class="inline-block border border-dashed border-darkText px-6 py-3 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
+                            <i class="fa-solid fa-video mr-2"></i> Загрузить медиа
+                            <input type="file" accept="image/*,video/mp4,video/webm" multiple class="hidden" onchange="handleLiveFeedUpload(event)">
+                        </label>
+                        <div id="adminLiveFeedList" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MorphGallery React Code (без изменений) -->
+    <script type="text/babel">
+        const wrapIndex = (i, n, loop) => { if (n <= 0) return 0; return loop ? ((i % n) + n) % n : Math.min(Math.max(i, 0), n - 1) }
+        const easeInOutQuint = (t) => { const x = Math.min(Math.max(t, 0), 1); return x < 0.5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2 }
+        const VERT = `attribute vec2 a_position; varying vec2 v_uv; void main() { v_uv = a_position * 0.5 + 0.5; gl_Position = vec4(a_position, 0.0, 1.0); }`
+        const FRAG = `
+        precision highp float;
+        uniform sampler2D u_from; uniform sampler2D u_to; uniform float u_progress; uniform vec2 u_resolution;
+        uniform float u_fromAspect; uniform float u_toAspect; uniform float u_scale; uniform float u_direction;
+        uniform float u_edge; uniform float u_drift;
+        varying vec2 v_uv;
+        vec3 permute(vec3 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
+        float snoise(vec2 v) {
+          const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+          vec2 i  = floor(v + dot(v, C.yy)); vec2 x0 = v - i + dot(i, C.xx);
+          vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0); vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1;
+          i = mod(i, 289.0); vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+          vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+          m = m * m; m = m * m; vec3 x = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5);
+          vec3 a0 = x - ox; m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+          vec3 g; g.x = a0.x * x0.x + h.x * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw; return 130.0 * dot(m, g);
+        }
+        float fbm(vec2 v) { float value = 0.0; float amplitude = 0.5; for (int i = 0; i < 5; i++) { value += amplitude * snoise(v); v *= 2.0; amplitude *= 0.5; } return value; }
+        vec2 mirror(vec2 uv) { return 1.0 - abs(1.0 - mod(uv, 2.0)); }
+        vec2 coverUV(vec2 uv, float imgAspect) { float canvasAspect = u_resolution.x / u_resolution.y; vec2 scale = (canvasAspect > imgAspect) ? vec2(1.0, imgAspect / canvasAspect) : vec2(canvasAspect / imgAspect, 1.0); return mirror((uv - 0.5) * scale + 0.5); }
+        void main() {
+          float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
+          float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
+          noise = smoothstep(0.0, 2.0, length(texture2D(u_to, coverUV(v_uv, u_toAspect)).rgb) + noise);
+          float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
+          vec2 fromUV = coverUV(v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction), u_fromAspect);
+          vec2 toUV = coverUV(v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction), u_toAspect);
+          gl_FragColor = mix(texture2D(u_from, fromUV), texture2D(u_to, toUV), mixFactor);
+        }
+        `
+        const compile = (gl, type, src) => { const shader = gl.createShader(type); gl.shaderSource(shader, src); gl.compileShader(shader); return shader }
+        const link = (gl, vertSrc, fragSrc) => { const vert = compile(gl, gl.VERTEX_SHADER, vertSrc); const frag = compile(gl, gl.FRAGMENT_SHADER, fragSrc); const program = gl.createProgram(); gl.attachShader(program, vert); gl.attachShader(program, frag); gl.linkProgram(program); return program }
+        const loadImage = (src) => new Promise((resolve, reject) => { const img = new Image(); img.crossOrigin = "anonymous"; img.onload = () => resolve(img); img.onerror = () => reject(); img.src = src; })
+
+        function MorphGallery({ items, duration = 1500, autoplay = 4000 }) {
+          const canvasRef = React.useRef(null); const [active, setActive] = React.useState(0); const [ready, setReady] = React.useState(false);
+          const request = React.useRef(null); const previous = React.useRef(active);
+
+          React.useEffect(() => { if (previous.current === active) return; request.current = { from: previous.current, to: active }; previous.current = active; }, [active])
+          React.useEffect(() => { if (items.length < 2) return; const id = setInterval(() => setActive(a => wrapIndex(a + 1, items.length, true)), autoplay); return () => clearInterval(id); }, [items.length, autoplay])
+
+          React.useEffect(() => {
+            const canvas = canvasRef.current; if (!canvas || items.length === 0) return;
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl"); if (!gl) return;
+            let program, buffer, raf = 0, disposed = false;
+            const textures = items.map(() => null); const aspects = items.map(() => 1);
+            let from = active, to = active, progress = 1, startedAt = 0, direction = 1, uniforms = {};
+            const resize = () => {
+              const w = canvas.clientWidth, h = canvas.clientHeight; if (w === 0 || h === 0) return;
+              canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
+            }
+            const observer = new ResizeObserver(resize); observer.observe(canvas);
+            const draw = () => {
+              if (disposed) return;
+              if (request.current) { from = request.current.from; to = request.current.to; progress = 0; startedAt = performance.now(); direction = to > from ? 1 : -1; request.current = null; }
+              if (progress < 1) progress = easeInOutQuint(Math.min((performance.now() - startedAt) / duration, 1));
+              const fromTex = textures[from] || textures[0], toTex = textures[to] || textures[0];
+              if (!fromTex || !toTex) return;
+              gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, fromTex); gl.uniform1i(uniforms.from, 0);
+              gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, toTex); gl.uniform1i(uniforms.to, 1);
+              gl.uniform1f(uniforms.progress, progress); gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+              gl.uniform1f(uniforms.fromAspect, aspects[from]); gl.uniform1f(uniforms.toAspect, aspects[to]);
+              gl.uniform1f(uniforms.scale, 3.5); gl.uniform1f(uniforms.direction, direction); gl.uniform1f(uniforms.edge, 0.15); gl.uniform1f(uniforms.drift, 0.5);
+              gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            }
+            const frame = () => { draw(); raf = requestAnimationFrame(frame) }
+            const start = async () => {
+              program = link(gl, VERT, FRAG); gl.useProgram(program);
+              buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+              const loc = gl.getAttribLocation(program, "a_position"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+              ["from", "to", "progress", "resolution", "fromAspect", "toAspect", "scale", "direction", "edge", "drift"].forEach(n => { uniforms[n] = gl.getUniformLocation(program, "u_" + n) });
+              gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+              await Promise.all(items.map((item, i) => loadImage(item.src).then(img => {
+                if (disposed) return; const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                textures[i] = tex; aspects[i] = img.naturalWidth / img.naturalHeight;
+              })));
+              resize(); setReady(true); raf = requestAnimationFrame(frame);
+            }
+            start();
+            return () => { disposed = true; cancelAnimationFrame(raf); observer.disconnect() }
+          }, [items.map(i=>i.src).join(',')]);
+          return (
+            <div className="relative w-full h-full">
+              <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" style={{opacity: ready ? 1 : 0, transition: "opacity 1s"}} />
+            </div>
+          )
+        }
+        window.renderReactMorphGallery = (items) => {
+          const rootEl = document.getElementById('morphGalleryRoot');
+          if (!rootEl) return;
+          if (!window.morphReactRoot) window.morphReactRoot = ReactDOM.createRoot(rootEl);
+          window.morphReactRoot.render(<MorphGallery items={items} />);
+        };
+    </script>
+
+    <script>
+        // --- База Данных IndexedDB ---
+        const idb = {
+            db: null,
+            init: function() {
+                return new Promise((resolve, reject) => {
+                    if (this.db) return resolve(this.db);
+                    const req = indexedDB.open('AbkhaziaTravelDB', 2);
+                    req.onupgradeneeded = (e) => { 
+                        if(!e.target.result.objectStoreNames.contains('store')) {
+                            e.target.result.createObjectStore('store'); 
+                        }
+                    };
+                    req.onsuccess = (e) => { this.db = e.target.result; resolve(this.db); };
+                    req.onerror = () => reject('IDB error');
+                });
+            },
+            get: async function(key) {
+                const db = await this.init();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('store', 'readonly');
+                    const req = tx.objectStore('store').get(key);
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject();
+                });
+            },
+            set: async function(key, val) {
+                const db = await this.init();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('store', 'readwrite');
+                    tx.objectStore('store').put(val, key);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => reject();
+                });
+            }
+        };
+
+        // --- Данные ---
+        // Фотографии по умолчанию (только для фона сайта и галереи из вашей прошлой версии, НИКАКИХ демо фото для машин)
+        const SITE_PHOTOS = {
+            siteItems: [
+                { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80', alt: 'Абхазия Пляж' },
+                { src: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80', alt: 'Трансфер' },
+                { src: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80', alt: 'Озеро Рица' }
+            ],
+            galleryItems: [
+                { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80' },
+                { src: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80' },
+                { src: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80' }
+            ]
+        };
+
+        // Пустые массивы для пользовательского контента
+        let CARS_DATA = []; // { id, title, description, photos: [] }
+        let LIVE_FEED_DATA = []; // { id, type: 'image'|'video', src }
+        let routePhotos = {};
+        
+        // --- Утилиты сжатия ---
+        function compressImage(base64Str, maxWidth = 1920, quality = 0.85) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = base64Str;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width; let height = img.height;
+                    if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+            });
+        }
+
+        async function processFilesForUpload(files, callback, asIsForVideo = false) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                const rawData = await new Promise(res => { reader.onload = e => res(e.target.result); reader.readAsDataURL(file); });
+                
+                if (file.type.startsWith('video') && asIsForVideo) {
+                    callback(rawData, file.name, 'video');
+                } else if (file.type.startsWith('image')) {
+                    const compressedData = await compressImage(rawData, 1920, 0.85);
+                    callback(compressedData, file.name, 'image');
+                }
+            }
+        }
+
+        // --- ЛОГИКА АВТОПАРКА (Новая) ---
+        let carsListExpanded = false;
+
+        function toggleCarsList() {
+            carsListExpanded = !carsListExpanded;
+            const wrapper = document.getElementById('carsExpandedWrapper');
+            const chevron = document.getElementById('carsChevron');
+            if (carsListExpanded) {
+                wrapper.classList.add('expanded');
+                if(chevron) chevron.classList.add('rotate-180');
+                renderCarsList();
+            } else {
+                wrapper.classList.remove('expanded');
+                if(chevron) chevron.classList.remove('rotate-180');
+            }
+        }
+
+        async function saveCarsData() {
+            await idb.set('abkhazia_cars_data', CARS_DATA);
+            renderCarShowcaseSlider();
+        }
+
+        function addNewCar() {
+            const title = prompt("Введите название автомобиля (например, Mercedes S-Class):");
+            if (!title) return;
+            CARS_DATA.push({
+                id: 'car_' + Date.now(),
+                title: title,
+                description: '',
+                photos: []
+            });
+            saveCarsData();
+            renderCarsList();
+        }
+
+        function deleteCar(carId) {
+            if(!confirm("Удалить этот автомобиль полностью?")) return;
+            CARS_DATA = CARS_DATA.filter(c => c.id !== carId);
+            saveCarsData();
+            renderCarsList();
+        }
+
+        async function handleCarPhotoUpload(event, carId) {
+            if (!event.target.files.length) return;
+            const car = CARS_DATA.find(c => c.id === carId);
+            if(!car) return;
+            
+            await processFilesForUpload(event.target.files, (data) => {
+                car.photos.push(data);
+            });
+            await saveCarsData();
+            renderCarsList();
+        }
+
+        function deleteCarPhoto(carId, photoIdx) {
+            const car = CARS_DATA.find(c => c.id === carId);
+            if(car) {
+                car.photos.splice(photoIdx, 1);
+                saveCarsData();
+                renderCarsList();
+            }
+        }
+
+        function updateCarDescription(carId, el) {
+            const car = CARS_DATA.find(c => c.id === carId);
+            if(car) {
+                car.description = el.value;
+                saveCarsData();
+            }
+            // Авто-ресайз текстареа
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight) + 'px';
+        }
+
+        function renderCarsList() {
+            const container = document.getElementById('carsListContainer');
+            if(!container) return;
+
+            if(CARS_DATA.length === 0) {
+                container.innerHTML = `<p class="text-mutedText text-center py-8">Список машин пуст. Нажмите «Добавить машину».</p>`;
+                return;
+            }
+
+            container.innerHTML = CARS_DATA.map(car => `
+                <div class="bg-siteBg rounded-2xl border border-borderLight overflow-hidden flex flex-col transition-all duration-500 ease-in-out hover:shadow-lg">
+                    <div class="p-6 border-b border-borderLight/50 flex justify-between items-center bg-white">
+                        <h4 class="text-2xl font-weight-heading text-darkText">${car.title}</h4>
+                        <button onclick="deleteCar('${car.id}')" class="text-mutedText hover:text-red-500 transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-50">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- Галерея фото конкретной машины -->
+                        <div class="flex overflow-x-auto gap-4 pb-4 snap-x swipe-container h-48 md:h-64 mb-6">
+                            ${car.photos.map((p, idx) => `
+                                <div class="relative group min-w-[200px] md:min-w-[300px] h-full rounded-xl overflow-hidden snap-center shrink-0 border border-borderLight">
+                                    <img src="${p}" onclick="openLightbox('${p}')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-500 enhanced-img">
+                                    <button onclick="deleteCarPhoto('${car.id}',${idx})" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white text-darkText flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all shadow-md z-10">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            `).join('')}
+                            
+                            <!-- Кнопка добавления фото -->
+                            <label class="min-w-[200px] md:min-w-[300px] h-full rounded-xl border-2 border-dashed border-borderLight hover:border-darkText flex flex-col items-center justify-center cursor-pointer transition-colors snap-center shrink-0 bg-white/50 group">
+                                <i class="fa-solid fa-plus text-3xl text-borderLight group-hover:text-darkText transition-colors mb-2"></i>
+                                <span class="text-sm font-medium text-mutedText group-hover:text-darkText transition-colors">Загрузить фото</span>
+                                <input type="file" accept="image/*" multiple class="hidden" onchange="handleCarPhotoUpload(event, '${car.id}')">
+                            </label>
+                        </div>
+                        
+                        <!-- Описание (плавный переход) -->
+                        <div class="bg-white rounded-xl border border-borderLight p-4 transition-all duration-300 focus-within:ring-1 focus-within:ring-black/20 focus-within:shadow-sm">
+                            <textarea placeholder="Введите описание автомобиля, характеристики, особенности..." 
+                                      class="w-full bg-transparent outline-none text-darkText font-weight-body text-sm md:text-base auto-resize transition-all duration-300"
+                                      oninput="updateCarDescription('${car.id}', this)">${car.description}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Триггер ресайза всех текстарей
+            document.querySelectorAll('.auto-resize').forEach(el => {
+                el.style.height = 'auto';
+                el.style.height = (el.scrollHeight) + 'px';
+            });
+        }
+
+        // Слайдер машин на главном экране (вытягивает все фото из CARS_DATA)
+        let carSliderInterval;
+        let currentCarIndex = 0;
+        function renderCarShowcaseSlider() {
+            const container = document.getElementById('carShowcaseContainer');
+            if(!container) return;
+            
+            // Собираем все фото из всех добавленных машин
+            let allPhotos = CARS_DATA.flatMap(c => c.photos);
+            
+            // Если ничего не добавлено, показываем пустой серый блок с иконкой
+            if(allPhotos.length === 0) {
+                container.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center text-mutedText"><i class="fa-solid fa-car text-6xl mb-4 opacity-50"></i><p>Автопарк не заполнен</p></div>`;
+                clearInterval(carSliderInterval);
+                return;
+            }
+            
+            container.innerHTML = allPhotos.map((src, idx) => `
+                <img src="${src}" id="car-slide-${idx}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+            `).join('') + `<div class="absolute inset-0 bg-black/10 transition-colors z-20 pointer-events-none group-hover:bg-black/0"></div>`;
+            
+            clearInterval(carSliderInterval);
+            if(allPhotos.length > 1) {
+                carSliderInterval = setInterval(() => {
+                    const prevIdx = currentCarIndex;
+                    currentCarIndex = (currentCarIndex + 1) % allPhotos.length;
+                    
+                    const prevImg = document.getElementById(`car-slide-${prevIdx}`);
+                    const nextImg = document.getElementById(`car-slide-${currentCarIndex}`);
+                    
+                    if(prevImg) { prevImg.classList.replace('opacity-100', 'opacity-0'); prevImg.classList.replace('z-10', 'z-0'); }
+                    if(nextImg) { nextImg.classList.replace('opacity-0', 'opacity-100'); nextImg.classList.replace('z-0', 'z-10'); }
+                }, 4000);
+            }
+        }
+
+
+        // --- ЛОГИКА ЖИВОГО САЙТА (Live Feed) ---
+        async function handleLiveFeedUpload(event) {
+            if (!event.target.files.length) return;
+            await processFilesForUpload(event.target.files, (data, name, type) => {
+                LIVE_FEED_DATA.push({
+                    id: 'live_' + Date.now() + Math.floor(Math.random()*100),
+                    type: type,
+                    src: data
+                });
+            }, true); // true = asIsForVideo
+            
+            await idb.set('abkhazia_live_feed', LIVE_FEED_DATA);
+            renderLiveFeed();
+            renderAdminLiveFeed();
+        }
+
+        function deleteLiveFeedItem(id) {
+            LIVE_FEED_DATA = LIVE_FEED_DATA.filter(item => item.id !== id);
+            idb.set('abkhazia_live_feed', LIVE_FEED_DATA);
+            renderLiveFeed();
+            renderAdminLiveFeed();
+        }
+
+        function renderLiveFeed() {
+            const grid = document.getElementById('liveFeedGrid');
+            if(!grid) return;
+            
+            if(LIVE_FEED_DATA.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-mutedText border border-dashed border-borderLight rounded-xl">Лента пуста. Добавьте видео или фото через админку.</div>`;
+                return;
+            }
+
+            grid.innerHTML = LIVE_FEED_DATA.map((item, idx) => {
+                const delay = (idx % 3) * 100;
+                
+                if(item.type === 'video') {
+                    return `
+                    <div class="reveal-element rounded-2xl overflow-hidden shadow-lg border border-borderLight relative group h-[400px] bg-black" style="transition-delay: ${delay}ms;">
+                        <video src="${item.src}" playsinline autoplay loop muted class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+                    </div>`;
+                } else {
+                    return `
+                    <div class="reveal-element rounded-2xl overflow-hidden shadow-lg border border-borderLight relative group h-[400px]" style="transition-delay: ${delay}ms;" onclick="openLightbox('${item.src}')">
+                        <img src="${item.src}" class="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110 enhanced-img">
+                    </div>`;
+                }
+            }).join('');
+            
+            // Ре-инициализация наблюдателя за появлением элементов
+            initScrollAnimations();
+        }
+
+
+        // --- СТАРЫЕ ФУНКЦИИ АДМИНКИ И ГАЛЕРЕИ (с поддержкой вкладок) ---
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(el => {
+                el.classList.remove('border-black', 'text-black');
+                el.classList.add('border-transparent', 'text-mutedText');
+            });
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = Array.from(document.querySelectorAll('.admin-tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if(activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-mutedText');
+                activeBtn.classList.add('border-black', 'text-black');
+            }
+        }
+
+        async function handleFileUpload(event) {
+            if (!event.target.files.length) return;
+            await processFilesForUpload(event.target.files, (data, name) => { SITE_PHOTOS.siteItems.push({ src: data, alt: name }); });
+            await idb.set('abkhazia_site_slides', SITE_PHOTOS.siteItems);
+            updateMorphGallery(); renderAdminMediaLists();
+        }
+
+        async function handleGalleryUpload(event) {
+            if (!event.target.files.length) return;
+            await processFilesForUpload(event.target.files, (data) => { SITE_PHOTOS.galleryItems.push({ src: data }); });
+            await idb.set('abkhazia_gallery_photos', SITE_PHOTOS.galleryItems);
+            renderVortexGallery(); renderAdminMediaLists();
+        }
+
+        function deleteAdminItem(listName, idx, storageKey, renderFunc) {
+            SITE_PHOTOS[listName].splice(idx, 1);
+            idb.set(storageKey, SITE_PHOTOS[listName]).then(() => { renderFunc(); renderAdminMediaLists(); });
+        }
+
+        function renderAdminMediaLists() {
+            const createListHTML = (list, name, key, rFunc) => list.map((item, idx) => `
+                <div class="relative group rounded-lg overflow-hidden h-24 border border-borderLight bg-siteBg">
+                    <img src="${item.src}" class="w-full h-full object-cover">
+                    <button onclick="deleteAdminItem('${name}', ${idx}, '${key}', ${rFunc.name})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-white text-darkText flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-md">
+                        <i class="fa-solid fa-trash text-[10px]"></i>
+                    </button>
+                </div>`).join('');
+
+            document.getElementById('adminCarouselList').innerHTML = createListHTML(SITE_PHOTOS.siteItems, 'siteItems', 'abkhazia_site_slides', updateMorphGallery);
+            document.getElementById('adminGalleryList').innerHTML = createListHTML(SITE_PHOTOS.galleryItems, 'galleryItems', 'abkhazia_gallery_photos', renderVortexGallery);
+            renderAdminLiveFeed();
+        }
+
+        function renderAdminLiveFeed() {
+            const container = document.getElementById('adminLiveFeedList');
+            if(!container) return;
+            container.innerHTML = LIVE_FEED_DATA.map(item => `
+                <div class="relative group rounded-lg overflow-hidden h-24 border border-borderLight bg-black">
+                    ${item.type === 'video' 
+                        ? `<video src="${item.src}" class="w-full h-full object-cover opacity-70"></video><i class="fa-solid fa-video absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white"></i>` 
+                        : `<img src="${item.src}" class="w-full h-full object-cover">`}
+                    <button onclick="deleteLiveFeedItem('${item.id}')" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-white text-darkText flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-md z-10">
+                        <i class="fa-solid fa-trash text-[10px]"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleAdminModal() {
+            const modal = document.getElementById('adminModal');
+            if (modal.classList.contains('hidden')) {
+                renderAdminMediaLists(); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            } else {
+                modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        // Маршруты и 3D галерея (сохранены из оригинального кода)
+        const initialSochiRoutes = [ { id: 's1', destination: 'Гагра', price: '5 000 руб.' }, { id: 's2', destination: 'Пицунда', price: '6 000 руб.' }, { id: 's3', destination: 'Гудаута', price: '6 500 руб.' }, { id: 's4', destination: 'Новый Афон', price: '7 000 руб.' }, { id: 's5', destination: 'Сухум', price: '8 000 руб.' } ];
+        const initialSukhumRoutes = [ { id: 'k1', destination: 'Сухум', price: '3 500 руб.' }, { id: 'k2', destination: 'Новый Афон', price: '4 500 руб.' }, { id: 'k3', destination: 'Гудаута', price: '5 500 руб.' }, { id: 'k4', destination: 'Пицунда', price: '6 500 руб.' }, { id: 'k5', destination: 'Гагра', price: '7 500 руб.' } ];
+        const initialTours = [ { id: 't1', route: 'Сухум - Новый Афон - оз. Рица - Гагра', price: '20 000 руб.' }, { id: 't2', route: 'Новый Афон - оз. Рица - Гагра', price: '15 000 руб.' }, { id: 't3', route: 'Гагра - оз. Рица', price: '10 000 руб.' }, { id: 't4', route: 'Гагра - Новый Афон - оз. Рица', price: '15 000 руб.' }, { id: 't5', route: 'Сухум - Ткуарчал - Черниговка', price: '15 000 - 17 000 руб.' } ];
+
+        function renderRoutes() {
+            const createTransferHTML = (item, prefix) => `<div onclick="openRouteModal('${prefix} ${item.destination}', '${item.price}', '${item.id}')" class="clean-card p-5 flex items-center justify-between cursor-pointer group"><span class="font-weight-body text-darkText">${item.destination}</span><div class="flex items-center space-x-3"><span class="font-weight-heading text-darkText text-lg">${item.price}</span><i class="fa-solid fa-arrow-right text-sm text-borderLight group-hover:text-darkText transition-all transform group-hover:translate-x-1"></i></div></div>`;
+            document.getElementById('sochiRoutes').innerHTML = initialSochiRoutes.map(i => createTransferHTML(i, 'Из Сочи в')).join('');
+            document.getElementById('sukhumRoutes').innerHTML = initialSukhumRoutes.map(i => createTransferHTML(i, 'Из Сухума в')).join('');
+            document.getElementById('toursList').innerHTML = initialTours.map((item, idx) => `<div onclick="openRouteModal('Экскурсия: ${item.route}', '${item.price}', '${item.id}')" class="clean-card p-8 cursor-pointer flex flex-col justify-between group reveal-element ${idx % 2 === 0 ? 'delay-100' : ''}"><div><div class="flex items-center justify-between mb-8"><span class="text-xs uppercase tracking-widest text-mutedText font-medium">Тур</span><i class="fa-solid fa-arrow-up-right-from-square text-borderLight group-hover:text-darkText transition-colors"></i></div><h3 class="text-xl font-medium text-darkText mb-12 leading-snug">${item.route}</h3></div><div class="pt-6 border-t border-borderLight/40 flex items-center justify-between mt-auto"><span class="text-darkText font-medium text-lg">${item.price}</span></div></div>`).join('');
+        }
+
+        // Лайтбокс и инициализация
+        function openLightbox(url) {
+            const modal = document.getElementById('lightboxModal'), img = document.getElementById('lightboxImg');
+            img.src = url; modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); img.classList.replace('scale-95', 'scale-100'); }, 10);
+        }
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal'), img = document.getElementById('lightboxImg');
+            modal.classList.add('opacity-0'); img.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        let activeRouteId = null;
+        function openRouteModal(title, price, routeId) { activeRouteId = routeId; document.getElementById('modalTitle').innerText = title; document.getElementById('modalPrice').innerText = price; renderRouteModalPhotos(); const m = document.getElementById('routeModal'); m.classList.remove('hidden'); setTimeout(()=>m.classList.remove('opacity-0'),10); }
+        function closeRouteModal() { const m = document.getElementById('routeModal'); m.classList.add('opacity-0'); setTimeout(()=>m.classList.add('hidden'),300); }
+        async function uploadRoutePhotos(e) { if(!e.target.files.length||!activeRouteId)return; if(!routePhotos[activeRouteId]) routePhotos[activeRouteId]=[]; await processFilesForUpload(e.target.files, (data)=>{routePhotos[activeRouteId].push(data);}); await idb.set('abkhazia_route_photos', routePhotos); renderRouteModalPhotos(); renderVortexGallery(); }
+        function renderRouteModalPhotos() { const gal = document.getElementById('modalGallery'); const p = routePhotos[activeRouteId]||[]; if(!p.length){ gal.innerHTML=`<div class="w-full text-center py-16 text-mutedText border border-dashed rounded-xl">Фотографий нет</div>`; } else { gal.innerHTML=p.map((url,idx)=>`<div class="relative group min-w-[70%] md:min-w-[50%] h-full snap-center rounded-xl overflow-hidden shrink-0"><img src="${url}" onclick="openLightbox('${url}')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform enhanced-img"><button onclick="deleteRoutePhoto(${idx})" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white text-darkText opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all shadow-lg"><i class="fa-solid fa-trash"></i></button></div>`).join(''); } }
+        async function deleteRoutePhoto(idx) { routePhotos[activeRouteId].splice(idx,1); await idb.set('abkhazia_route_photos', routePhotos); renderRouteModalPhotos(); renderVortexGallery(); }
+
+        let vortexAngle = 0, isDraggingVortex = false, startX = 0;
+        function renderVortexGallery() {
+            const container = document.getElementById('vortexCarousel');
+            if (!container) return;
+            const images = Array.from(new Set([...SITE_PHOTOS.galleryItems.map(s=>s.src), ...Object.values(routePhotos).flat()]));
+            if(images.length === 0) images.push('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80');
+            const total = images.length, radius = Math.max(340, window.innerWidth * 0.4), angleStep = 360 / Math.max(total, 1);
+            container.innerHTML = images.map((url, idx) => `<div class="vortex-card" style="transform: rotateY(${idx * angleStep}deg) translateZ(${radius}px);" onclick="openLightbox('${url}')"><img src="${url}" class="w-full h-full object-cover pointer-events-none enhanced-img"></div>`).join('');
+            updateVortexTransform();
+        }
+        function updateVortexTransform() { document.getElementById('vortexCarousel').style.transform = `rotateY(${vortexAngle}deg)`; }
+        function rotateVortex(dir) { vortexAngle += dir * 40; updateVortexTransform(); }
+        function initVortexInteractions() { const stage = document.querySelector('.vortex-stage'); if(!stage)return; const startDrag=e=>{isDraggingVortex=true;startX=e.clientX||e.touches[0].clientX;}; const moveDrag=e=>{if(!isDraggingVortex)return; vortexAngle+=((e.clientX||e.touches[0].clientX)-startX)*0.5; startX=e.clientX||e.touches[0].clientX; updateVortexTransform();}; const stopDrag=()=>isDraggingVortex=false; stage.addEventListener('mousedown',startDrag); window.addEventListener('mousemove',moveDrag); window.addEventListener('mouseup',stopDrag); stage.addEventListener('touchstart',startDrag,{passive:true}); stage.addEventListener('touchmove',moveDrag,{passive:true}); stage.addEventListener('touchend',stopDrag); }
+        function updateMorphGallery() { if(window.renderReactMorphGallery) window.renderReactMorphGallery(SITE_PHOTOS.siteItems); }
+
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, { root: null, threshold: 0.1 });
+            document.querySelectorAll('.reveal-element').forEach(el => observer.observe(el));
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Загружаем сохраненные данные
+                const sSlides = await idb.get('abkhazia_site_slides'); if (sSlides?.length) SITE_PHOTOS.siteItems = sSlides;
+                const sGallery = await idb.get('abkhazia_gallery_photos'); if (sGallery?.length) SITE_PHOTOS.galleryItems = sGallery;
+                const sRoutes = await idb.get('abkhazia_route_photos'); if (sRoutes) routePhotos = sRoutes;
+                const sCars = await idb.get('abkhazia_cars_data'); if (sCars) CARS_DATA = sCars;
+                const sLive = await idb.get('abkhazia_live_feed'); if (sLive) LIVE_FEED_DATA = sLive;
+            } catch(e) { console.error("DB Load Error", e); }
+
+            renderRoutes();
+            setTimeout(() => {
+                updateMorphGallery(); 
+                renderCarShowcaseSlider();
+                renderCarsList();
+                renderLiveFeed();
+                renderVortexGallery();
+                initVortexInteractions(); 
+                initScrollAnimations();
+            }, 150);
+        });
+        window.addEventListener('resize', renderVortexGallery);
+    </script>
+</body>
+</html>
